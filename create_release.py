@@ -23,7 +23,7 @@ shutil.copytree(working_dir, release_folder)
 
 # reroute the user to the new release:
 release_url = base_url + release_folder
-with open(redirect_template_fp, mode="w", encoding="utf-8") as file:
+with open(redirect_template_fp, mode="r", encoding="utf-8") as file:
     html = file.read()
 html = html.replace("LATEST_VERSION_URL", release_url)
 with open("index.html", mode="w", encoding="utf-8") as file:
