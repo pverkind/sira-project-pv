@@ -81,12 +81,12 @@ function toggleCard(e) {
     // get the value of the clicked checkbox:
     var thisChecked = checkbox.checked;
     // set both the internal and external checkboxes to the same:
-    document.querySelector("#"+id0+"-index-cb").checked = thisChecked
+    document.querySelector("#"+id0+"-index-cb").checked = thisChecked;
     var cardCB = document.querySelector("#"+id0+"-card-cb")
-    cardCB.checked = thisChecked
+    cardCB.checked = thisChecked;
     // hide the card:
-    let card = cardCB.parentNode;
-    card.classList.toggle("hidden")
+    let card = cardCB.parentNode.parentNode;
+    card.classList.toggle("hidden");
 }
 
 

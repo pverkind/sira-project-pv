@@ -250,6 +250,9 @@ def convert_to_html(text_file_path, html_folder, template_str):
             #print("-------> meta_header!")
             body += format_meta(section)
             meta_header = False
+            # remove all the metadata and extract any paragraphs that precede the first section header:
+            section = re.sub("#META#.+|#OpenITI-RKJ#", "", section)
+            body += format_section_content(section)
         elif section.startswith("### |"): # this section is a section header
             #print("-------> section_header!")
             #print(section)
@@ -286,9 +289,10 @@ def format_meta(section):
     arabic_author = re.findall("#META# المؤلف: *(.+)", section)
     if arabic_author:
         s += "<h2>" + arabic_author[0].strip() + "</h2>\n"
-    english_title = re.findall("#META# Title: *(.+)", section)
+    english_title = re.findall("Transliterated Name: *(.+)", section)
     if english_title:
         s += "<h2>" + english_title[0].strip() + "</h2>\n"
+    
     return s
 
 def make_variant_card(id_, text, comment, checkbox=True, hidden=False):
