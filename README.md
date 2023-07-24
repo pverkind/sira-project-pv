@@ -6,23 +6,23 @@ It can be viewed here: [pverkind.github.io/sira-project-pv/](https://pverkind.gi
 The website is versioned: the index.html file in the root folder of the repository
 will redirect to the latest released version (releases are dated: vYYYY-MM-DD).
 
+External users should only use the released version, which is citable and does not change.
 The latest changes (since the latest release) are visible under 
 [pverkind.github.io/sira-project-pv/work-in-progress](https://pverkind.github.io/sira-project-pv/work-in-progress)
-External users should only use the released version, which is citable and does not change.
 
-The goal is that Kevin can keep on working on his files and whenever he pushes his changes to GitHub,
+The goal is that Kevin can keep on working on his witness files and whenever he pushes his changes to GitHub,
 the changes will be reflected in the work-in-progress page. When he's happy with the current state of the website
 (or, every 6 months), he can create a new dated release. 
 
 The GitHub Actions script that updates the website whenever a change is pushed to GitHub
-also performs some consistency tests on the data. You can see the output reports (logs) of the GitHub Actions 
+also performs some consistency tests on the data. You can see the output reports ("logs") of the GitHub Actions 
 script under the "Actions" tab in the github repo. In the left-hand column, click "Build website" to see
 a report for all website updates. Click on the label of the latest run of the "Build website" workflow,
 then click "build-html" and then on "rebuild website". The log lists all the inconsistencies the script found
 in the witness files; you can fix these manually in the witness files. 
 
 
-# setup
+# Setup
 
 For this to work, you should:
 
@@ -69,7 +69,7 @@ The content of the root folder of your repo is now served under <your_github_nam
 * Anytime BEFORE you want to work on the texts on your computer, pull the latest changes from GitHub: 
   `git pull origin main`
 * The witness files are in the witness_data folder: work on them there, and whenever you are ready, 
-  push them to GitHub using these commands:
+  push them to GitHub using the following series of commands:
   - `git status`  (shows you all files that have changed)
   - `git add .`   (this collects all changes you made)
   - `git commit -m "(write a message describing what you changed here)"`  (record your changes in your local git repo)
@@ -82,7 +82,7 @@ The content of the root folder of your repo is now served under <your_github_nam
   in the `homepage_data` folder. Anything you write here should be in 
   [markdown](https://www.markdownguide.org/basic-syntax/); this will be automatically
   converted into HTML by the script. Once you have finished updating the files, 
-  push them to GitHub using these commands:
+  push them to GitHub using the following series of commands:
   - `git status`  (shows you all files that have changed)
   - `git add .`   (this collects all changes you made)
   - `git commit -m "(write a message describing what you changed here)"`  (record your changes in your local git repo)
@@ -91,10 +91,11 @@ The content of the root folder of your repo is now served under <your_github_nam
 
   Once you have pushed the changes, the [work-in-progress page](https://pverkind.github.io/sira-project-pv/work-in-progress) will be updated
   (this will take a couple of minutes; you can follow the progress in the Actions tab on the repo's GitHub page)
+  * creating a new release: go to the Actions tab in this repo, click on "manual release" in the left-hand column,
+    then on the "Run workflow" dropdown on the right, and inside the dropdown on the "Run workflow" button.
+    This should create a new folder in the repository with today's date, which contains a copy of the work-in-project folder,
+    and update the index.html file so that visitors to your website are automatically forwarded to this new release. 
 
 # TO DO: 
 
-* create a new workflow file called "new_release.yml", which will use the "on: workflow_dispatch" event to enable Kevin to create a new release version of the website manually (see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch):
-  - creates a new time-stamped folder that is a copy of the work-in-progress folder
-  - creates a new index.html file in the root folder that diverts to the newest version
-* create a workflow that creates a new release version every 3 / 6 months? 
+
