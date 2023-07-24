@@ -4,7 +4,7 @@ on:
     - cron: '0 0 1 */2 *'  # 4 times a year: “At 00:00 on day-of-month 1 in every 3rd month.” ; see https://crontab.guru/every-quarter
   
 jobs:
-  manual-release:
+  quarterly-release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -41,6 +41,8 @@ jobs:
         run: |
           releasename="v$(date +%Y-%m-%d)"
           git tag -a $releasename -m "release version $releasename"
+        shell:
+          bash
 
       - name: push the tag
         run: |
