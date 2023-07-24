@@ -31,8 +31,7 @@ jobs:
           bash
       
       - name: check for changes to be committed
-        run: | 
-          id: check_changes
+        id: check_changes
         run: |
           git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
         
