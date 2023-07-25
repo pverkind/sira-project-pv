@@ -14,6 +14,7 @@ NB: To read the script: start at the bottom!
 import os
 import re
 import sys
+import unicodedata
 import pandas as pd
 import markdown
 
@@ -81,6 +82,20 @@ def create_html_path(file_name, html_folder):
     html_fn = file_name.split('.')[0] + '.html'
     html_path = os.path.join(html_folder, html_fn)
     return html_path
+
+def clean_filename(fn, lowercase=False):
+    """Remove non-ascii letter characters and spaces from filenames"""
+    # replace spaces with hyphens:
+    fn = re.sub(r"\s+", "-", fn)
+    # separate combining characters:
+    fn = unicodedata.normalize("NFD", fn)
+    # remove anything that is not an ASCII word character or hypen:
+    fn = re.sub(r"[^a-zA-Z0-9\-]+", "", fn)
+    # convert to lowercase:
+    if lowercase:
+        fn = fn.lower()
+    return fn
+    
 
 def clean_text(text, fn):
     """Clean the text to remove tags that we don't want to display and to make working with regular expressions easier.
@@ -893,7 +908,8 @@ def main():
         fp = os.path.join(homepage_folder, fn)
         if fn.endswith(("md", "html")) and os.path.isfile(fp):
             html_fn = fn.replace(".md", ".html")
-            html_fn = html_fn.replace(" ", "-").lower()
+            #html_fn = html_fn.replace(" ", "-").lower()
+            html_fn = clean_filename(html_fn, lowercase=True)
             html_fp = os.path.join(html_folder, html_fn)
             label = re.sub("\.html|\.md", "", fn).lower()
             if fn != "index.md":
