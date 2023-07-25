@@ -13,6 +13,7 @@ NB: To read the script: start at the bottom!
 
 import os
 import re
+import shutil
 import sys
 import unicodedata
 import pandas as pd
@@ -90,7 +91,7 @@ def clean_filename(fn, lowercase=False):
     # separate combining characters:
     fn = unicodedata.normalize("NFD", fn)
     # remove anything that is not an ASCII word character or hypen:
-    fn = re.sub(r"[^a-zA-Z0-9\-]+", "", fn)
+    fn = re.sub(r"[^a-zA-Z0-9\-.]+", "", fn)
     # convert to lowercase:
     if lowercase:
         fn = fn.lower()
@@ -857,7 +858,19 @@ def generate_info_page(template_str, md_fp, html_fp, direction="ltr"):
     with open(html_fp, "w", encoding="utf-8") as html_file:
         html_file.write(html_content)
 
-
+def generate_menu_bar(homepage_folder, html_folder):
+    menu_bar = ""
+    for fn in os.listdir(homepage_folder):
+        fp = os.path.join(homepage_folder, fn)
+        if fn.endswith(("md", "html")) and os.path.isfile(fp):
+            html_fn = fn.replace(".md", ".html")
+            #html_fn = html_fn.replace(" ", "-").lower()
+            html_fn = clean_filename(html_fn, lowercase=True)
+            html_fp = os.path.join(html_folder, html_fn)
+            label = re.sub("\.html|\.md", "", fn).lower()
+            if fn != "index.md":
+                menu_bar += f'      <div><a href="{html_fn}">{label}</a></div>\n'
+    return menu_bar
     
 def main():
     """Build the website"""
@@ -876,65 +889,87 @@ def main():
         html_folder = sys.argv[2]
     except: 
         html_folder = "work-in-progress"
-    # abort if the output folder doesn't exist yet:
-    if not os.path.exists(html_folder):
-        print("output folder", html_folder, "does not exist. Aborting.")
-        sys.exit(1) # abort the execution
 
-    # load the html template for the web pages:
-    root_folder = os.path.dirname(html_folder)
-    page_template_fp = os.path.join(root_folder, "templates", "page_template.html")
-    with open(page_template_fp, mode="r", encoding="utf-8") as file:
-        template_str = file.read()
-
-    # Step 1: generate the list of paths to all html files and add it to the template:
-    if os.path.isdir(path):
-        data_folder = path
-    elif os.path.isfile(path):
-        data_folder = os.path.dirname(path)
+    # create a safety copy of the output folder:
+    if os.path.exists(html_folder):
+        if os.path.exists("safety_copy"): 
+            shutil.rmtree("safety_copy") # create existing temp folder
+        shutil.copytree(html_folder, "safety_copy")
     else:
-        print(path)
-        print("is not a valid path to a file or folder")
-        sys.exit(1) # abort the execution
+        os.makedirs(html_folder)
+        os.makedirs("safety_copy")
 
-    file_list = generate_file_list(data_folder, html_folder)
-    witness_list = generate_witness_list(file_list)
-    template_str = re.sub("WITNESS_LIST_HERE", witness_list, template_str)
+    try:
+        # load the html template for the web pages:
+        root_folder = os.path.dirname(html_folder)
+        page_template_fp = os.path.join(root_folder, "templates", "page_template.html")
+        with open(page_template_fp, mode="r", encoding="utf-8") as file:
+            template_str = file.read()
 
-    # step 2: generate the menu bar based on the files in the "homepage_data" folder and add it to the template:
-    menu_bar = ""
-    homepage_folder = os.path.join(root_folder, "homepage_data")
-    for fn in os.listdir(homepage_folder):
-        fp = os.path.join(homepage_folder, fn)
-        if fn.endswith(("md", "html")) and os.path.isfile(fp):
-            html_fn = fn.replace(".md", ".html")
-            #html_fn = html_fn.replace(" ", "-").lower()
-            html_fn = clean_filename(html_fn, lowercase=True)
-            html_fp = os.path.join(html_folder, html_fn)
-            label = re.sub("\.html|\.md", "", fn).lower()
-            if fn != "index.md":
-                menu_bar += f'      <div><a href="{html_fn}">{label}</a></div>\n'
-    template_str = re.sub("MENU_BAR_HERE", menu_bar, template_str)
+        # Step 1: generate the list of paths to all html files and add it to the template:
+        
+        # get the path to the data folder:
+        if os.path.isdir(path):
+            data_folder = path
+            # remove the html files currently in the output folder:
+            for fn in os.listdir(html_folder):
+                if fn.endswith("html"):
+                    os.remove(os.path.join(html_folder, fn))
+        elif os.path.isfile(path):
+            data_folder = os.path.dirname(path)
+        else:
+            print(path)
+            print("is not a valid path to a file or folder")
+            sys.exit(1) # abort the execution
+        # create a list of output filepaths based on the contents of the data_folder:
+        file_list = generate_file_list(data_folder, html_folder)
+        # add the links to the witness pages to the sidebar in the html template:
+        witness_list = generate_witness_list(file_list)
+        template_str = re.sub("WITNESS_LIST_HERE", witness_list, template_str)
 
-    # step 3: generate the index page and other info pages:
-    for fn in os.listdir(homepage_folder):
-        fp = os.path.join(homepage_folder, fn)
-        if fn.endswith("md") and os.path.isfile(fp):
-            html_fn = fn.replace(".md", ".html")
-            html_fn = html_fn.replace(" ", "-").lower()
-            html_fp = os.path.join(html_folder, html_fn)
-            # generate the html page:
-            generate_info_page(template_str, fp, html_fp)
+        # step 2: generate the menu bar based on the files in the "homepage_data" folder and add it to the template:
+        
+        homepage_folder = os.path.join(root_folder, "homepage_data")
+        menu_bar = generate_menu_bar(homepage_folder, html_folder)
+        template_str = re.sub("MENU_BAR_HERE", menu_bar, template_str)
 
-    # Step 4: convert the witness file(s) to html:
-    if os.path.isdir(path):
-        # if the argument is a folder, convert all files in it to html:
-        for fn in os.listdir(path):
-            fp = os.path.join(path, fn)
-            html_path = convert_to_html(fp, html_folder, template_str)
-    elif os.path.isfile(path):
-        # if the argument is a file, convert that file only:
-        html_path = convert_to_html(path, html_folder, template_str)
+        # step 3: generate the index page and other info pages:
+        
+        for fn in os.listdir(homepage_folder):
+            fp = os.path.join(homepage_folder, fn)
+            if fn.endswith("md") and os.path.isfile(fp):
+                html_fn = fn.replace(".md", ".html")
+                #html_fn = html_fn.replace(" ", "-").lower()
+                html_fn = clean_filename(html_fn, lowercase=True)
+                html_fp = os.path.join(html_folder, html_fn)
+                # generate the html page:
+                generate_info_page(template_str, fp, html_fp)
+
+        # Step 4: convert the witness file(s) to html:
+        
+        if os.path.isdir(path):
+            # if the argument is a folder, convert all files in it to html:
+            for fn in os.listdir(path):
+                fp = os.path.join(path, fn)
+                html_path = convert_to_html(fp, html_folder, template_str)
+        elif os.path.isfile(path):
+            # if the argument is a file, convert that file only:
+            html_path = convert_to_html(path, html_folder, template_str)
+    
+    except:
+        # print the full exception traceback:
+        import traceback
+        traceback.print_exc()
+        # restore the output folder:
+        print("restoring safety copy")
+        shutil.rmtree(html_folder)
+        shutil.copytree("safety_copy", html_folder)
+        shutil.rmtree("safety_copy")
+        # abort script:
+        sys.exit(1)
+
+    # clean up safety copy:
+    shutil.rmtree("safety_copy")
 
     
 if __name__ == "__main__":
