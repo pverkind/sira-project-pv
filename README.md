@@ -68,6 +68,7 @@ The content of the root folder of your repo is now served under <your_github_nam
 
 * Anytime BEFORE you want to work on the texts on your computer, pull the latest changes from GitHub: 
   `git pull origin main`
+  (alternatively, download the file directly from GitHub)
 * The witness files are in the witness_data folder: work on them there, and whenever you are ready, 
   push them to GitHub using the following series of commands:
   - `git status`  (shows you all files that have changed)
@@ -75,8 +76,11 @@ The content of the root folder of your repo is now served under <your_github_nam
   - `git commit -m "(write a message describing what you changed here)"`  (record your changes in your local git repo)
   - `git pull origin main`  (make sure you have the latest changes from GitHub)
   - `git push origin main`  (this sends your changes to GitHub)
-
-  Once you have pushed the changes, the [work-in-progress page](https://pverkind.github.io/sira-project-pv/work-in-progress) will be updated
+  (alternatively, go to the witness_data folder on GitHub, click the
+  "add file" button, and then "upload files" in the dropdown menu that opens.
+  You can now drag and drop the updated/new file. You'll be asked
+  to provide a descriptive "commit message" before the file is uploaded.)
+  Once you have uploaded the changes, the [work-in-progress page](https://pverkind.github.io/sira-project-pv/work-in-progress) will be updated
   (this will take a couple of minutes; you can follow the progress in the Actions tab on the repo's GitHub page)
 * If you want to change the descriptions on the website, open the relevant file 
   in the `homepage_data` folder. Anything you write here should be in 
@@ -88,8 +92,11 @@ The content of the root folder of your repo is now served under <your_github_nam
   - `git commit -m "(write a message describing what you changed here)"`  (record your changes in your local git repo)
   - `git pull origin main`  (make sure you have the latest changes from GitHub)
   - `git push origin main`  (this sends your changes to GitHub)
+  - 
+  (alternatively, again, you can upload the changes
+  directly on the GitHub website by clicking the "upload file" button)
 
-  Once you have pushed the changes, the [work-in-progress page](https://pverkind.github.io/sira-project-pv/work-in-progress) will be updated
+  Once you have uploaded the changes, the [work-in-progress page](https://pverkind.github.io/sira-project-pv/work-in-progress) will be updated
   (this will take a couple of minutes; you can follow the progress in the Actions tab on the repo's GitHub page)
   * creating a new release: go to the Actions tab in this repo, click on "manual release" in the left-hand column,
     then on the "Run workflow" dropdown on the right, and inside the dropdown on the "Run workflow" button.
