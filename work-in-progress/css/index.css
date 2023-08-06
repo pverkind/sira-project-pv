@@ -66,7 +66,9 @@ p {
 .reference-container {
     margin-top: 10px;
 }
-
+.ref-title {
+    font-style: italic;
+}
 
 
 /* the header and horizontal menu bar: */
