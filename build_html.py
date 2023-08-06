@@ -73,7 +73,7 @@ selected_columns = df[['ID', 'short_author', 'short_title']]
 bibliography_dict = {}
 for index, row in selected_columns.iterrows():
     key = row['ID']
-    value = f"{row['short_author']}, {row['short_title']}"
+    value = f"<span class='ref-author'>{row['short_author']}</span>, <span class='ref-title'>{row['short_title']}</span>"
     bibliography_dict[key] = value
 
 
