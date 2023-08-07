@@ -303,15 +303,18 @@ def format_meta(section):
             before the first section header
     """
     s = ""
+
+    english_title = re.findall("Transliterated Name: *(.+)", section)
+    if english_title:
+        s += "<h2>The witness version of " + english_title[0].strip() + "</h2>\n"
+
     arabic_title = re.findall("#META# الكتاب: *(.+)", section)
     if arabic_title:
         s += "<h1>" + arabic_title[0].strip() + "</h1>\n"
+
     arabic_author = re.findall("#META# المؤلف: *(.+)", section)
     if arabic_author:
         s += "<h2>" + arabic_author[0].strip() + "</h2>\n"
-    english_title = re.findall("Transliterated Name: *(.+)", section)
-    if english_title:
-        s += "<h2>" + english_title[0].strip() + "</h2>\n"
     
     return s
 
