@@ -23,6 +23,25 @@ function toggleSidebar() {
 document.getElementById("closeSidebarBtn").addEventListener('click', toggleSidebar);
 document.getElementById("openSidebarBtn").addEventListener('click', toggleSidebar);
 
+function toggleToc() {
+  // toggle the table of contents:
+  var toc = document.getElementById("toc");
+  toc.classList.toggle("hidden");
+  // adapt the width of the main content of the page:
+  console.log(document.getElementById("pageContent"));
+  if (toc.classList.contains("hidden")) {
+    console.log("TOC HIDDEN");
+    document.getElementById("pageContent").style.marginRight = "5%";
+  } else {
+    console.log("TOC DISPLAYED");
+    document.getElementById("pageContent").style.marginright = "20%";
+  }
+  // toggle the toc button:
+  document.getElementById("openTocBtn").classList.toggle("hidden");
+}
+
+document.getElementById("closeTocBtn").addEventListener('click', toggleToc);
+document.getElementById("openTocBtn").addEventListener('click', toggleToc);
 
 
 // toggle visibility of the list of witnesses:
