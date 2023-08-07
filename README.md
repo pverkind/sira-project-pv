@@ -47,16 +47,19 @@ The content of the root folder of your repo is now served under <your_github_nam
 |     |- workflows/
 |           |- build_website.yml: script that runs on github server anytime something is changed to the repo;
 |                                 it uses the build_html.py script (in the root folder) to rebuild the website.
-|- witness_data/ : contains the witness text files
-|- homepage_data/ : contains markdown files for each section on the homepage. 
-|                   When you create a new markdown file here, a new section will be added to the menu bar. 
+|- data/ : contains the data from which the website is built
+|     |- witness_files/ : contains the witness text files
+|     |- top_menu/ : contains markdown files for each section in the horizontal menu on the top of the website. 
+|     |              When you create a new markdown file here, a new section will be added to the menu bar. 
+|     |- side_menu/ : contains markdown files for each section in the side menu on the website. 
+|     |               When you create a new markdown file here, a new section will be added to the side menu. 
+|     |- meta/ : contains the Excel files with the metadata for the witness codes and bibliography
 |- work-in-progress/ : contains the generated witness html pages for the latest data
 |     |- css/ : contains the css files that define the styling of the website
 |     |- js/ : contains the javascript files that make the website interactive
 |     |- ... : all html files of the website 
 |- vYYYY-MM-DD/ : v for version, YYYY for year, MM for month, DD for day: stable releases of the website
 |- images/ : contains all images needed for the website (photos of contributors, header image, funders' logos, ...)
-|- meta/ : contains the Excel files with the metadata for the witness codes and bibliography
 |- templates/ : contains the templates used to build the website
 |- index.html: web page that sends the user to the latest release version of the website
 |- build_html.py: the python script that builds the website
@@ -69,21 +72,21 @@ The content of the root folder of your repo is now served under <your_github_nam
 * Anytime BEFORE you want to work on the texts on your computer, pull the latest changes from GitHub: 
   `git pull origin main`
   (alternatively, download the file directly from GitHub)
-* The witness files are in the witness_data folder: work on them there, and whenever you are ready, 
+* The witness files are in the data/witness_files folder: work on them there, and whenever you are ready, 
   push them to GitHub using the following series of commands:
   - `git status`  (shows you all files that have changed)
   - `git add .`   (this collects all changes you made)
   - `git commit -m "(write a message describing what you changed here)"`  (record your changes in your local git repo)
   - `git pull origin main`  (make sure you have the latest changes from GitHub)
   - `git push origin main`  (this sends your changes to GitHub)
-  (alternatively, go to the witness_data folder on GitHub, click the
+  (alternatively, go to the data/witness_files folder on GitHub, click the
   "add file" button, and then "upload files" in the dropdown menu that opens.
   You can now drag and drop the updated/new file. You'll be asked
   to provide a descriptive "commit message" before the file is uploaded.)
   Once you have uploaded the changes, the [work-in-progress page](https://pverkind.github.io/sira-project-pv/work-in-progress) will be updated
   (this will take a couple of minutes; you can follow the progress in the Actions tab on the repo's GitHub page)
 * If you want to change the descriptions on the website, open the relevant file 
-  in the `homepage_data` folder. Anything you write here should be in 
+  in the `data/top_menu` folder. Anything you write here should be in 
   [markdown](https://www.markdownguide.org/basic-syntax/); this will be automatically
   converted into HTML by the script. Once you have finished updating the files, 
   push them to GitHub using the following series of commands:

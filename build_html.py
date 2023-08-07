@@ -59,7 +59,7 @@ comm_regex = r"# @COMMENT:"
 
 # Create a dictionary that contains verbose definition of each witness code:
 root_folder = os.getcwd()
-df = pd.read_excel(os.path.join(root_folder, "meta", "Witness_list_sheet.xlsx"))
+df = pd.read_excel(os.path.join(root_folder, "data", "meta", "Witness_list_sheet.xlsx"))
 selected_columns = df[['Arabic name', 'Witness ']]
 witness_dict = {}
 for index, row in selected_columns.iterrows():
@@ -68,7 +68,7 @@ for index, row in selected_columns.iterrows():
     witness_dict[key] = value
 
 # create a dictionary that contains a verbose citation for each citation code: 
-df = pd.read_excel(os.path.join(root_folder, "meta", "Kevin Bibliography.xlsx"))
+df = pd.read_excel(os.path.join(root_folder, "data", "meta", "Kevin Bibliography.xlsx"))
 selected_columns = df[['ID', 'short_author', 'short_title']]
 bibliography_dict = {}
 for index, row in selected_columns.iterrows():
@@ -858,10 +858,10 @@ def generate_info_page(template_str, md_fp, html_fp, direction="ltr"):
     with open(html_fp, "w", encoding="utf-8") as html_file:
         html_file.write(html_content)
 
-def generate_menu_bar(homepage_folder, html_folder):
+def generate_menu_bar(top_menu_folder, html_folder):
     menu_bar = ""
-    for fn in os.listdir(homepage_folder):
-        fp = os.path.join(homepage_folder, fn)
+    for fn in os.listdir(top_menu_folder):
+        fp = os.path.join(top_menu_folder, fn)
         if fn.endswith(("md", "html")) and os.path.isfile(fp):
             html_fn = fn.replace(".md", ".html")
             #html_fn = html_fn.replace(" ", "-").lower()
@@ -927,16 +927,16 @@ def main():
         witness_list = generate_witness_list(file_list)
         template_str = re.sub("WITNESS_LIST_HERE", witness_list, template_str)
 
-        # step 2: generate the menu bar based on the files in the "homepage_data" folder and add it to the template:
+        # step 2: generate the menu bar based on the files in the "data/top_menu" folder and add it to the template:
         
-        homepage_folder = os.path.join(root_folder, "homepage_data")
-        menu_bar = generate_menu_bar(homepage_folder, html_folder)
+        top_menu_folder = os.path.join(root_folder, "data", "top_menu")
+        menu_bar = generate_menu_bar(top_menu_folder, html_folder)
         template_str = re.sub("MENU_BAR_HERE", menu_bar, template_str)
 
         # step 3: generate the index page and other info pages:
         
-        for fn in os.listdir(homepage_folder):
-            fp = os.path.join(homepage_folder, fn)
+        for fn in os.listdir(top_menu_folder):
+            fp = os.path.join(top_menu_folder, fn)
             if fn.endswith("md") and os.path.isfile(fp):
                 html_fn = fn.replace(".md", ".html")
                 #html_fn = html_fn.replace(" ", "-").lower()
