@@ -226,6 +226,12 @@ def clean_text(text, fn):
 
     return text
 
+def build_toc(toc_d):
+    toc_str = ""
+    for slug, title in toc_d.items():
+        toc_str += f"     <a href='#{slug}'>{title}</a>\n"
+    return toc_str
+
 def check_unicode_characters(text):
     import unicodedata
     print("This is a list of all unicode characters used in the text:")
@@ -247,7 +253,8 @@ def convert_to_html(text_file_path, html_folder, template_str):
     print("********************************************************")
     print("converting", text_file_path)
     print("********************************************************")
-    
+    # create a dictionary to contain the table of contents:
+    toc = dict()
     # load the text:
     with open(text_file_path, 'r', encoding='utf-8') as file: 
         text = file.read()
@@ -276,7 +283,7 @@ def convert_to_html(text_file_path, html_folder, template_str):
         elif section.startswith("### |"): # this section is a section header
             #print("-------> section_header!")
             #print(section)
-            body += format_section_title(section)
+            body += format_section_title(section, toc)
         else: # this section contains the witness reports
             #print("-------> witness report!")
             body += format_section_content(section)
@@ -287,6 +294,10 @@ def convert_to_html(text_file_path, html_folder, template_str):
     #html_str = re.sub('<div id="pageContent">\s*</div>', f'<div id="pageContent">%s</div>' % body, html_str)
     html_str = re.sub("PAGE_CONTENT_HERE", body, template_str)
 
+    # build the table of contents and add it to the page:
+    toc_str = build_toc(toc)
+    html_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, html_str)
+    
     # save the witness html:
     html_fp = create_html_path(text_file_name, html_folder)
     with open(html_fp, mode="w", encoding="utf-8") as file:
@@ -406,8 +417,17 @@ def format_section_title(section_title):
     h_level = section_title.count("|") + 2
     # remove the mARkdown tag from the section title line:
     section_title = re.sub("### \|+ *", "", section_title)
+    # create unique slug from title:
+    slug = re.sub("[\Wa-zA-Z]+", "-", section_title)
+    i=0
+    while slug in toc:
+        i+=1
+        if i < 2:
+            slug += "1"
+        slug = slug[:-1] + str(i)
+    toc[slug] = section_title
     # wrap the section in html tags:
-    return f"<h{h_level}>{section_title.strip()}</h{h_level}>\n"
+    return f"<h{h_level} id='{slug}'>{section_title.strip()}</h{h_level}>\n"
 
 def format_report(witness_texts, comments, ids):
     if len(witness_texts) == 0:
