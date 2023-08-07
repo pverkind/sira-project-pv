@@ -582,9 +582,6 @@ def format_section_content(section):
 
     return s
 
-def format_id(id_):
-    # TO DO: look up ID and format it
-    return id_
 
 def format_page_number(page_no):
     """Convert a mARkdown page number to HTML"""
@@ -593,7 +590,7 @@ def format_page_number(page_no):
     page_no = f"(Page {page} of vol. {vol})"
     return page_no
 
-def format_page_number_sub(match_obj):
+def format_page_number_sub(match_obj, symbol="¶"):
     """This function can be used in a re.sub replacement
     to convert a mARkdown page number to HTML.
     The idea is to convert any page number inside a paragraph
@@ -603,7 +600,7 @@ def format_page_number_sub(match_obj):
     """
     # TO DO
     vol, page = (match_obj.group(1), match_obj.group(2))
-    a = f"<a class='page-no' href='javascript:void(0);' title='end of page {page} of vol. {vol}'>¶</a>"
+    a = f"<a class='page-no' href='javascript:void(0);' title='end of page {page} of vol. {vol}'>{symbol}</a>"
     return a
 
 
@@ -699,12 +696,15 @@ def format_comment(comment):
     # replace reference IDs with the full reference:
     comment = re.sub("([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)", expand_reference, comment)
 
+    # remove all tags inside the comment:
+    comment_without_tags = re.sub(" *<[^>]+?> *", " ", comment)
+
 
 
     
     return f"""\
 <div class='comment-container'>
-  <a title='{comment}' href="javascript:void(0);" class="comment-link">COMMENT</a>
+  <a title='{comment_without_tags}' href="javascript:void(0);" class="comment-link">COMMENT</a>
   <div class='comment hidden'><p>{comment}</p></div>
 </div>
 """
