@@ -406,12 +406,14 @@ def make_index_checkbox(id_, ref, checked=True):
                     <label for="{id_}" title="{ref}">{id_}</a></label>
                 </div>"""
 
-def format_section_title(section_title):
+def format_section_title(section_title, toc):
     """Format a section title as html tags (h3, h4, h5, ...)
 
     Args:
         section_title (str): a section title line from the witness text
         (introduced by mARkdown tag ### |, ### ||, ...)
+        toc (dict): dictionary containing the table of contents 
+            (keys: slug, values: section title)
     """
     # check the number of pipes to decide what html <h> tag should be used:
     h_level = section_title.count("|") + 2
