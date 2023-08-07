@@ -721,6 +721,8 @@ def format_comment(comment):
         except:
             print("WITNESS NOT FOUND IN DICTIONARY:", abb)
             expanded = "WITNESS NOT FOUND"
+        print("EXPANDED:", expanded)
+        input()
         return f'<a href="{abb}.html" target="_blank">{abb}</a> ({expanded})'
 
 
@@ -733,7 +735,7 @@ def format_comment(comment):
         return ""
     
     # replace witness abbreviations with their full names:
-    comment = re.sub("\b[A-Z]{4,5}\b", expand_witness, comment)
+    comment = re.sub(r"\b[A-Z]{4,5}\b", expand_witness, comment)
 
     # replace reference IDs with the full reference:
     comment = re.sub("([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)", expand_reference, comment)
@@ -806,6 +808,7 @@ def format_reference(id_, text):
     else:
         reference = f"{book_ref}, vol. {vol_no} p. {last_page}"
     
+    # remove any html tags inside the reference:
     reference_without_tags = re.sub(" *<[^>]+?> *", " ", reference)
 
     return f"""
