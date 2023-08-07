@@ -23,6 +23,9 @@ import markdown
 # GLOBAL VARIABLES #
 ####################
 
+# Define the symbol to be used for a page number in the text:
+PAGE_SYMBOL = "§"
+
 # create an empty set to which we will add the ID numbers that have already been mentioned;
 # we'll use this to check whether a paragraph is a variant of a previous report or not:
 all_ids = set()
@@ -590,7 +593,7 @@ def format_page_number(page_no):
     page_no = f"(Page {page} of vol. {vol})"
     return page_no
 
-def format_page_number_sub(match_obj, symbol="¶"):
+def format_page_number_sub(match_obj):
     """This function can be used in a re.sub replacement
     to convert a mARkdown page number to HTML.
     The idea is to convert any page number inside a paragraph
@@ -600,7 +603,7 @@ def format_page_number_sub(match_obj, symbol="¶"):
     """
     # TO DO
     vol, page = (match_obj.group(1), match_obj.group(2))
-    a = f"<a class='page-no' href='javascript:void(0);' title='end of page {page} of vol. {vol}'>{symbol}</a>"
+    a = f"<a class='page-no' href='javascript:void(0);' title='end of page {page} of vol. {vol}'>{PAGE_SYMBOL}</a>"
     return a
 
 
@@ -653,6 +656,29 @@ def format_witness_text(main_id, witness_text):
 # </div>
 # """
 
+def format_SEE(s):
+    """Format "SEE_" references"""
+    def expand_reference(m):
+        """Expand a reference abbreviation (e.g., "HSNXV01P233B") into a full reference.
+        
+        Args:
+            m (re.matchobj): matching object for the regex "([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)"
+        """
+        ref = m.group(0)
+        abb = m.group(1)
+        vol = m.group(2).lstrip('0')
+        page = m.group(3).lstrip('0')
+        try:
+            expanded = bibliography_dict[abb]
+        except:
+            print("REFERENCE NOT FOUND IN BIBLIOGRAPHY:", abb)
+            expanded = "[REFERENCE NOT FOUND IN BIBLIOGRAPHY]"
+        # remove any html tags inside the expanded reference:
+        expanded = re.sub("<[^>]+?>", "", expanded)
+        return f'<span class="see_reference" title="See {expanded}, vol. {vol} p. {page}">*</span>'
+    
+    s = re.sub("SEE_([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)", expand_reference, s)
+
 
 def format_comment(comment):
     """Convert a paragraph's comment(s) to HTML
@@ -662,16 +688,13 @@ def format_comment(comment):
     Args:
         comment (str): a comment on a witness report paragraph
     """
-    def expand_witness(m):
-        abb = m.group(0)
-        try:
-            expanded = witness_dict[abb]
-        except:
-            print("WITNESS NOT FOUND IN DICTIONARY:", abb)
-            expanded = "WITNESS NOT FOUND"
-        return f'<a href="{abb}.html" target="_blank">{abb}</a> ({expanded})'
 
     def expand_reference(m):
+        """Expand a reference abbreviation (e.g., "HSNXV01P233B") into a full reference.
+        
+        Args:
+            m (re.matchobj): matching object for the regex "([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)"
+        """
         ref = m.group(0)
         abb = m.group(1)
         vol = m.group(2).lstrip('0')
@@ -683,6 +706,22 @@ def format_comment(comment):
             expanded = "[REFERENCE NOT FOUND IN BIBLIOGRAPHY]"
         return f"{ref} ({expanded}, vol. {vol} p. {page})"
 
+    def expand_witness(m):
+        """Expand a witness abbreviation (e.g., WSACD) into a full reference.
+        
+        Args:
+            m (re.matchobj): matching object for the regex ""\b([A-Z]{4,5})\b""
+        """
+        abb = m.group(0)
+        try:
+            expanded = witness_dict[abb]
+        except:
+            print("WITNESS NOT FOUND IN DICTIONARY:", abb)
+            expanded = "WITNESS NOT FOUND"
+        return f'<a href="{abb}.html" target="_blank">{abb}</a> ({expanded})'
+
+
+
     # remove the comment tag:
     comment = re.sub(comm_regex, "", comment)
 
@@ -691,16 +730,13 @@ def format_comment(comment):
         return ""
     
     # replace witness abbreviations with their full names:
-    comment = re.sub("\b([A-Z]{4,5})\b", expand_witness, comment)
+    comment = re.sub("\b[A-Z]{4,5}\b", expand_witness, comment)
 
     # replace reference IDs with the full reference:
     comment = re.sub("([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)", expand_reference, comment)
 
     # remove all tags inside the comment:
     comment_without_tags = re.sub(" *<[^>]+?> *", " ", comment)
-
-
-
     
     return f"""\
 <div class='comment-container'>

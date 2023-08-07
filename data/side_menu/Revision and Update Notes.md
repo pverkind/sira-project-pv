@@ -1,1 +1,1 @@
-(to create content for this page, go to data/side_menu/Revision_and_Update_Notes.md)
+(to create content for this page, go to data/side_menu/Revision and Update Notes.md)
