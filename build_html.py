@@ -108,7 +108,8 @@ def clean_text(text, fn):
     # remove @EC... tags (e.g., @EC_12/30/22@):
     text = re.sub(" *@EC_[\d/]+@", "", text)
     # remove Kevin's personal tags:
-    text = re.sub("SEE_\w+(?: *to +\w+)?", "", text)
+    #text = re.sub("SEE_\w+(?: *to +\w+)?", "", text)
+    text = format_SEE(text)
 
     # remove carriage return (in Windows, a new line starts with both carriage return \r and newline \n character)
     text = re.sub(r"\r", "", text)
@@ -668,6 +669,7 @@ def format_SEE(s):
         abb = m.group(1)
         vol = m.group(2).lstrip('0')
         page = m.group(3).lstrip('0')
+        to_page = m.group(5)
         try:
             expanded = bibliography_dict[abb]
         except:
@@ -675,9 +677,9 @@ def format_SEE(s):
             expanded = "[REFERENCE NOT FOUND IN BIBLIOGRAPHY]"
         # remove any html tags inside the expanded reference:
         expanded = re.sub("<[^>]+?>", "", expanded)
-        return f'<span class="see_reference" title="See {expanded}, vol. {vol} p. {page}">*</span>'
+        return f'<span class="see_reference" title="See {expanded}, vol. {vol} p. {page}{to_page}">*</span>'
     
-    s = re.sub("SEE_([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)", expand_reference, s)
+    s = re.sub("SEE_([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)((?: *to +\w+)?)", expand_reference, s)
 
 
 def format_comment(comment):
