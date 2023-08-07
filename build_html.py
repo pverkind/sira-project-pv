@@ -945,10 +945,11 @@ def main():
         all_info_fps = []
         for folder in [top_menu_folder, side_menu_folder]:
             for fn in os.listdir(folder):
-                fp = os.path.join(top_menu_folder, fn)
-            all_info_fps.append((fp, fn))
-            
+                fp = os.path.join(folder, fn)
+                all_info_fps.append((fp, fn))
+
         for fp, fn in all_info_fps:
+            print(fp, fn)
             if fn.endswith("md") and os.path.isfile(fp):
                 html_fn = fn.replace(".md", ".html")
                 #html_fn = html_fn.replace(" ", "-").lower()
