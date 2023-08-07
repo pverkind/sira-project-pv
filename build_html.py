@@ -680,6 +680,7 @@ def format_SEE(s):
         return f'<span class="see_reference" title="See {expanded}, vol. {vol} p. {page}{to_page}">*</span>'
     
     s = re.sub("SEE_([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)((?: *to +\w+)?)", expand_reference, s)
+    return s
 
 
 def format_comment(comment):
