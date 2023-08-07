@@ -858,10 +858,12 @@ def generate_info_page(template_str, md_fp, html_fp, direction="ltr"):
     with open(html_fp, "w", encoding="utf-8") as html_file:
         html_file.write(html_content)
 
-def generate_menu_bar(top_menu_folder, html_folder):
+def generate_menu_bar(menu_folder, html_folder):
+    """Generate html pages from markdown files in the menu_folder 
+    and links to those files in the menu bar"""
     menu_bar = ""
-    for fn in os.listdir(top_menu_folder):
-        fp = os.path.join(top_menu_folder, fn)
+    for fn in os.listdir(menu_folder):
+        fp = os.path.join(menu_folder, fn)
         if fn.endswith(("md", "html")) and os.path.isfile(fp):
             html_fn = fn.replace(".md", ".html")
             #html_fn = html_fn.replace(" ", "-").lower()
@@ -927,11 +929,16 @@ def main():
         witness_list = generate_witness_list(file_list)
         template_str = re.sub("WITNESS_LIST_HERE", witness_list, template_str)
 
-        # step 2: generate the menu bar based on the files in the "data/top_menu" folder and add it to the template:
+        # step 2: generate the menu bars based on the files in the "data/top_menu" and "data/side_menu" folders
+        # and add them to the template:
         
         top_menu_folder = os.path.join(root_folder, "data", "top_menu")
-        menu_bar = generate_menu_bar(top_menu_folder, html_folder)
-        template_str = re.sub("MENU_BAR_HERE", menu_bar, template_str)
+        top_menu_bar = generate_menu_bar(top_menu_folder, html_folder)
+        template_str = re.sub("TOP_MENU_BAR_HERE", top_menu_bar, template_str)
+
+        side_menu_folder = os.path.join(root_folder, "data", "side_menu")
+        side_menu_bar = generate_menu_bar(side_menu_folder, html_folder)
+        template_str = re.sub("SIDE_MENU_BAR_HERE", side_menu_bar, template_str)
 
         # step 3: generate the index page and other info pages:
         
