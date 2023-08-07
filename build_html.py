@@ -805,10 +805,12 @@ def format_reference(id_, text):
         reference = f"{book_ref}, vol. {vol_no} p. {first_page}-{last_page}"
     else:
         reference = f"{book_ref}, vol. {vol_no} p. {last_page}"
+    
+    reference_without_tags = re.sub(" *<[^>]+?> *", " ", reference)
 
     return f"""
         <div class="reference-container">
-            <a title="{reference}" href="javascript:void(0);" class="ref-link">{id_}</a>
+            <a title="{reference_without_tags}" href="javascript:void(0);" class="ref-link">{id_}</a>
             <div class="reference hidden">
               <p>{reference}</p>
             </div>
