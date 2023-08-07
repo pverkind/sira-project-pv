@@ -713,7 +713,7 @@ def format_comment(comment):
         """Expand a witness abbreviation (e.g., WSACD) into a full reference.
         
         Args:
-            m (re.matchobj): matching object for the regex ""\b([A-Z]{4,5})\b""
+            m (re.matchobj): matching object for the regex r"\b([A-Z]{4,5})\b"
         """
         abb = m.group(0)
         try:
@@ -721,8 +721,7 @@ def format_comment(comment):
         except:
             print("WITNESS NOT FOUND IN DICTIONARY:", abb)
             expanded = "WITNESS NOT FOUND"
-        print("EXPANDED:", expanded)
-        input()
+
         return f'<a href="{abb}.html" target="_blank">{abb}</a> ({expanded})'
 
 
