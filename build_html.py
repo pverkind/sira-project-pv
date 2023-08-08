@@ -692,11 +692,10 @@ def format_SEE(s):
             m (re.matchobj): matching object for the regex "([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)"
         """
         ref = m.group(0)
-        text = m.group(1)
-        abb = m.group(2)
-        vol = m.group(3).lstrip('0')
-        page = m.group(4).lstrip('0')
-        to_page = m.group(6)
+        abb = m.group(1)
+        vol = m.group(2).lstrip('0')
+        page = m.group(3).lstrip('0')
+        to_page = m.group(5)
         try:
             expanded = bibliography_dict[abb]
         except:
@@ -704,9 +703,9 @@ def format_SEE(s):
             expanded = "[REFERENCE NOT FOUND IN BIBLIOGRAPHY]"
         # remove any html tags inside the expanded reference:
         expanded = re.sub("<[^>]+?>", "", expanded)
-        return f'<span class="see_reference" title="See {expanded}, vol. {vol} p. {page}{to_page}">{text} *</span>'
+        return f'<span class="see_reference" title="See {expanded}, vol. {vol} p. {page}{to_page}">*</span>'
     
-    s = re.sub(r"([^\|#\n]*)SEE_([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)((?: *to +\w+)?)", expand_reference, s)
+    s = re.sub("SEE_([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)((?: *to +\w+)?)", expand_reference, s)
     return s
 
 
