@@ -226,10 +226,11 @@ def clean_text(text, fn):
 
     return text
 
-def build_toc(toc_d):
+def build_toc(toc_d, toc_template):
     toc_str = ""
     for slug, title in toc_d.items():
         toc_str += f"     <a href='#{slug}'>{title}</a>\n"
+    toc_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, toc_template)
     return toc_str
 
 def check_unicode_characters(text):
@@ -241,7 +242,7 @@ def check_unicode_characters(text):
         except:
             print([char], "NO NAME FOUND!")
 
-def convert_to_html(text_file_path, html_folder, template_str): 
+def convert_to_html(text_file_path, html_folder, template_str, toc_template): 
     """
     Convert a single witness text file to html and store it in the html folder
 
@@ -295,7 +296,7 @@ def convert_to_html(text_file_path, html_folder, template_str):
     html_str = re.sub("PAGE_CONTENT_HERE", body, template_str)
 
     # build the table of contents and add it to the page:
-    toc_str = build_toc(toc)
+    toc_str = build_toc(toc, toc_template)
     print(toc_str)
     html_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, html_str)
     
@@ -923,6 +924,9 @@ def generate_info_page(template_str, md_fp, html_fp, direction="ltr"):
     # paste it into the template:
     html_content = re.sub("PAGE_CONTENT_HERE", html, template_str)
 
+    # remove the TOC placeholder
+    html_content = re.sub("TABLE_OF_CONTENTS_HERE", "", html_content)
+
     # save it into the html folder:
     with open(html_fp, "w", encoding="utf-8") as html_file:
         html_file.write(html_content)
@@ -971,11 +975,15 @@ def main():
         os.makedirs("safety_copy")
 
     try:
-        # load the html template for the web pages:
+        # load the html templates for the web pages:
         root_folder = os.path.dirname(html_folder)
-        page_template_fp = os.path.join(root_folder, "templates", "page_template.html")
+        template_folder = os.path.join(root_folder, "templates")
+        page_template_fp =  os.path.join(template_folder, "page_template.html")
         with open(page_template_fp, mode="r", encoding="utf-8") as file:
             template_str = file.read()
+        toc_template_fp = os.path.join(template_folder, "table_of_contents.html")
+        with open(toc_template_fp, mode="r", encoding="utf-8") as file:
+            toc_template = file.read()
 
         # Step 1: generate the list of paths to all html files and add it to the template:
         
@@ -1034,10 +1042,10 @@ def main():
             # if the argument is a folder, convert all files in it to html:
             for fn in os.listdir(path):
                 fp = os.path.join(path, fn)
-                html_path = convert_to_html(fp, html_folder, template_str)
+                html_path = convert_to_html(fp, html_folder, template_str, toc_template)
         elif os.path.isfile(path):
             # if the argument is a file, convert that file only:
-            html_path = convert_to_html(path, html_folder, template_str)
+            html_path = convert_to_html(path, html_folder, template_str, toc_template)
     
     except:
         # print the full exception traceback:
