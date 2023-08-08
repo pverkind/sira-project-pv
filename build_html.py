@@ -909,9 +909,20 @@ def generate_info_page(template_str, md_fp, html_fp, direction="ltr"):
             Default: "ltr".
     """
     print("generating", html_fp, "from", md_fp)
+    
     # change the main text direction of the page to left-to-right if the text is in English:
     if direction == "ltr":
         template_str = re.sub("""dir=['"]rtl['"]""", 'dir="ltr"', template_str)
+
+    # check if a specific css file exists for this file (a css file with the same filename)
+    # and insert a link to that css file in the html header if it exists:
+    html_folder, html_fn = os.path.split(html_fp)
+    css_fn = html_fn[:-5] + ".css"
+    css_fp = os.path.join(html_folder, "css", css_fn)
+    if os.path.exists(css_fp):
+        placeholder = "<!--INSERT_PAGE_SPECIFIC_CSS_HERE-->"
+        style_sheet_link = f'<link rel="stylesheet" type="text/css" href="./css/{css_fn}">'
+        template_str = re.sub(placeholder, style_sheet_link, template_str)
 
     # convert the index.md markdown file to html:
     if md_fp.endswith("md"):
