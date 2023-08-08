@@ -39,10 +39,12 @@ function toggleToc() {
   // toggle the toc button:
   document.getElementById("openTocBtn").classList.toggle("hidden");
 }
-
-document.getElementById("closeTocBtn").addEventListener('click', toggleToc);
-document.getElementById("openTocBtn").addEventListener('click', toggleToc);
-
+try {
+  document.getElementById("closeTocBtn").addEventListener('click', toggleToc);
+  document.getElementById("openTocBtn").addEventListener('click', toggleToc);
+} catch (error) {
+  console.error(error);
+}
 
 // toggle visibility of the list of witnesses:
 document.getElementById("witnessListLink").addEventListener('click', function () {
