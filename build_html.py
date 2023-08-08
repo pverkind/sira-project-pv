@@ -297,7 +297,6 @@ def convert_to_html(text_file_path, html_folder, template_str, toc_template):
 
     # build the table of contents and add it to the page:
     toc_str = build_toc(toc, toc_template)
-    print(toc_str)
     html_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, html_str)
     
     # save the witness html:
