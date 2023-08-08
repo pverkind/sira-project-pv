@@ -760,18 +760,24 @@ def format_comment(comment):
         return ""
     
     # replace witness abbreviations with their full names:
-    comment = re.sub(r"\b[A-Z]{4,5}\b", expand_witness, comment)
+    comment = re.sub(r"\bW[A-Z]{4}\b", expand_witness, comment)
 
     # replace reference IDs with the full reference:
     comment = re.sub("([A-Z]{4,5})V(\d+)P(\d+)([A-Z]*)", expand_reference, comment)
 
     # remove all tags inside the comment:
     comment_without_tags = re.sub(" *<[^>]+?> *", " ", comment)
+
+    # split comment into paragraphs:
+    split_comment = re.split(" *\n+ *", comment)
+    comment = "\n    ".join([f'<p dir="auto">{p}</p>' for p in split_comment])
     
     return f"""\
 <div class='comment-container'>
   <a title='{comment_without_tags}' href="javascript:void(0);" class="comment-link">COMMENT</a>
-  <div class='comment hidden'><p>{comment}</p></div>
+  <div class='comment hidden'>
+    {comment}
+  </div>
 </div>
 """
 

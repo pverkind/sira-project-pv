@@ -275,10 +275,10 @@ background-color: #444;
 .added {
     background-color: lightblue;
 }
-.comment > p {
+/*.comment > p {
     unicode-bidi: embed;
     direction: ltr;
-}
+}*/
 .reference > p {
     unicode-bidi: embed;
     direction: ltr;
