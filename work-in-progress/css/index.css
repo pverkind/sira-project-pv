@@ -156,10 +156,19 @@ p {
 }
 
 /* Position and style the close button (top right corner of the sidebar) */
-.sidebar .closebtn {
+#dashboard .closebtn {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: -20px;
+    right: 0px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* Position and style the close button (top left corner of the sidebar) */
+#toc .closebtn {
+    position: absolute;
+    top: -20px;
+    left: 0px;
     font-size: 36px;
     margin-left: 50px;
 }
