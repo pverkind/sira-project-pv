@@ -1,4 +1,10 @@
 img {
-    max-height: 20%;
+    width: 30%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+.header-image {
+    height: 200;
     width: auto;
 }
