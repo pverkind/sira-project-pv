@@ -233,10 +233,127 @@ def clean_text(text, fn):
 #     toc_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, toc_template)
 #     return toc_str
 
+
+
+def add_collapsible_tags(markdown_list_str, open_levels=1, indentation=4):
+    """Add html tags to turn a nested list into a collapsible tree view.
+    See https://iamkate.com/code/tree-views/
+
+    Args:
+        markdown_list_str (str): a markdown list
+        open_levels (int): the number of levels that should be open 
+            when the html list is loaded (html code: "<details open>")
+        indentation (int): the number of spaces used to indent the markdown list
+    
+    Example: given the following markdown string:
+
+    ```
+    * Giant planets
+      * Gas giants
+        * Jupiter
+        * Saturn</details>
+      * Ice giants
+        * Uranus
+        * Neptune
+    ```
+    
+    The function should return: 
+
+    ```
+    * <details open><summary>Giant planets</summary>
+      * <details><summary>Gas giants</summary>
+        * Jupiter
+        * Saturn</details>
+      * <details><summary>Ice giants</summary>
+        * Uranus
+        * Neptune</details></details>
+    ```
+
+    Which can then be turned into this html: 
+
+    ```
+    <ul>
+        <li>
+            <details open>
+            <summary>Giant planets</summary>
+            <ul>
+                <li>
+                <details>
+                    <summary>Gas giants</summary>
+                    <ul>
+                    <li>Jupiter</li>
+                    <li>Saturn</li>
+                    </ul>
+                </details>
+                </li>
+                <li>
+                <details>
+                    <summary>Ice giants</summary>
+                    <ul>
+                    <li>Uranus</li>
+                    <li>Neptune</li>
+                    </ul>
+                </details>
+                </li>
+            </ul>
+            </details>
+        </li>
+    </ul>
+    ```
+
+    """
+    # normalize the enumeration characters (*, -, +) to asterisk:
+    markdown_list_str = re.sub(r"^( *)[*+\-]", r"\1*", markdown_list_str.strip())
+
+    # deal with empty list:
+    if not markdown_list_str:
+        return ""
+
+    # split the markdown list into lines:
+    markdown_list = markdown_list_str.split("\n")
+    new = []
+    for i, line in enumerate(markdown_list):
+        print(i, [line])
+        # get the current line's level based on its indentation:
+        spaces, link = line.split("* ")
+        current_level = int(len(spaces) / indentation)
+
+        # check if there's a next line:
+        try:
+            next_line = markdown_list[i+1]
+        except: 
+            # the end! There's no next line, so close all open details tags 
+            # and return the updated markdown list as a string:
+            new.append(line + (current_level * "</details>" ))
+            return "\n".join(new)
+        
+        # check the level of the next line:
+        next_level = int(len(next_line.split("* ")[0]) / indentation)
+        if next_level > current_level:
+            # open a new details-summary pair:
+            if current_level < open_levels:
+                details_tag = "<details open>"
+            else:
+                details_tag = "<details>"
+            new.append(f"{spaces}* {details_tag}<summary>{link}</summary>")
+        elif next_level == current_level:
+            # no need to do anything - simply add the current line to the list:
+            new.append(line)
+        elif next_level < current_level: 
+            # close relevant open details-summary pairs with the current line:
+            new.append(line + (current_level - next_level) * "</details>" ) 
+
+
 def build_toc(toc_md, toc_template):
+    """Create the html for the table of contents from the markdown string"""
+    #print(toc_md)
+    # add html tags to the markdown table of contents to make the heading levels collapsible:
+    toc_md = add_collapsible_tags(toc_md)
+    # convert the markdown list to html:
     toc_html = markdown.markdown(toc_md)
-    print(toc_html)
-    input("CONTINUE?")
+    # embed the html code in the template:
+    toc_html = re.sub("TABLE_OF_CONTENTS_HERE", toc_html, toc_template)
+    #print(toc_html)
     return toc_html
 
 def check_unicode_characters(text):
@@ -290,7 +407,8 @@ def convert_to_html(text_file_path, html_folder, template_str, toc_template):
         elif section.startswith("### |"): # this section is a section header
             #print("-------> section_header!")
             #print(section)
-            body += format_section_title(section, toc_md)
+            section_title, toc_md = format_section_title(section, toc_md)
+            body += section_title
         else: # this section contains the witness reports
             #print("-------> witness report!")
             body += format_section_content(section)
@@ -413,7 +531,7 @@ def make_index_checkbox(id_, ref, checked=True):
                     <label for="{id_}" title="{ref}">{id_}</a></label>
                 </div>"""
 
-def format_section_title(section_title, toc_md):
+def format_section_title(section_title, toc_md, indentation=4):
     """Format a section title as html tags (h3, h4, h5, ...)
 
     Args:
@@ -424,8 +542,9 @@ def format_section_title(section_title, toc_md):
     """
     # check the number of pipes to decide what html <h> tag should be used:
     h_level = section_title.count("|") + 2
+    spaces = (section_title.count("|")-1) * indentation * " "
     # remove the mARkdown tag from the section title line:
-    section_title = re.sub("### \|+ *", "", section_title)
+    section_title = re.sub("### \|+ *", "", section_title.strip())
     # create unique slug from title:
     slug = re.sub("[^ ء-ي]+", "", section_title)
     slug = re.sub("\s+", "-", slug.strip())
@@ -438,12 +557,15 @@ def format_section_title(section_title, toc_md):
             slug += "1"
         slug = slug[:-1] + str(i)
     # create the toc markdown: 
-    spaces = section_title.count("|") * 2
-    title_without_tags = re.sub(" *<[^>]+?> *", " ", section_title)
-    toc_md += f"{spaces}* [{title_without_tags}](#{slug})\n"
+    title_without_tags = re.sub(" *<[^>]+?> *|\*", " ", section_title)
+    #print(title_without_tags, "(spaces:", [spaces], ")")
+    link = f"[{title_without_tags}](#{slug})"
+    toc_md += f"{spaces}* {link}\n"
     #toc[slug] = section_title
     # wrap the section in html tags:
-    return f"<h{h_level} id='{slug}'>{section_title.strip()}</h{h_level}>\n"
+    section_title_html = f"<h{h_level} id='{slug}'>{section_title}</h{h_level}>\n"
+
+    return section_title_html, toc_md
 
 def format_report(witness_texts, comments, ids):
     if len(witness_texts) == 0:
