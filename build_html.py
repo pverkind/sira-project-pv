@@ -226,12 +226,18 @@ def clean_text(text, fn):
 
     return text
 
-def build_toc(toc_d, toc_template):
-    toc_str = ""
-    for slug, title in toc_d.items():
-        toc_str += f"     <a href='#{slug}'>{title}</a>\n"
-    toc_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, toc_template)
-    return toc_str
+# def build_toc(toc_d, toc_template):
+#     toc_str = ""
+#     for slug, title in toc_d.items():
+#         toc_str += f"     <a href='#{slug}'>{title}</a>\n"
+#     toc_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, toc_template)
+#     return toc_str
+
+def build_toc(toc_md, toc_template):
+    toc_html = markdown.markdown(toc_md)
+    print(toc_html)
+    input("CONTINUE?")
+    return toc_html
 
 def check_unicode_characters(text):
     import unicodedata
@@ -254,8 +260,8 @@ def convert_to_html(text_file_path, html_folder, template_str, toc_template):
     print("********************************************************")
     print("converting", text_file_path)
     print("********************************************************")
-    # create a dictionary to contain the table of contents:
-    toc = dict()
+    # create an empty string that will contain the markdown code for the table of contents:
+    toc_md = ""
     # load the text:
     with open(text_file_path, 'r', encoding='utf-8') as file: 
         text = file.read()
@@ -284,7 +290,7 @@ def convert_to_html(text_file_path, html_folder, template_str, toc_template):
         elif section.startswith("### |"): # this section is a section header
             #print("-------> section_header!")
             #print(section)
-            body += format_section_title(section, toc)
+            body += format_section_title(section, toc_md)
         else: # this section contains the witness reports
             #print("-------> witness report!")
             body += format_section_content(section)
@@ -296,8 +302,8 @@ def convert_to_html(text_file_path, html_folder, template_str, toc_template):
     html_str = re.sub("PAGE_CONTENT_HERE", body, template_str)
 
     # build the table of contents and add it to the page:
-    toc_str = build_toc(toc, toc_template)
-    html_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, html_str)
+    toc_html = build_toc(toc_md, toc_template)
+    html_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_html, html_str)
     
     # save the witness html:
     html_fp = create_html_path(text_file_name, html_folder)
@@ -407,7 +413,7 @@ def make_index_checkbox(id_, ref, checked=True):
                     <label for="{id_}" title="{ref}">{id_}</a></label>
                 </div>"""
 
-def format_section_title(section_title, toc):
+def format_section_title(section_title, toc_md):
     """Format a section title as html tags (h3, h4, h5, ...)
 
     Args:
@@ -421,14 +427,21 @@ def format_section_title(section_title, toc):
     # remove the mARkdown tag from the section title line:
     section_title = re.sub("### \|+ *", "", section_title)
     # create unique slug from title:
-    slug = re.sub("[\Wa-zA-Z]+", "-", section_title)
+    slug = re.sub("[^ ء-ي]+", "", section_title)
+    slug = re.sub("\s+", "-", slug.strip())
+    # make sure slug is unique
+    slugs = re.findall("\(#([^)]+)", toc_md)
     i=0
-    while slug in toc:
+    while slug in slugs:
         i+=1
         if i < 2:
             slug += "1"
         slug = slug[:-1] + str(i)
-    toc[slug] = section_title
+    # create the toc markdown: 
+    spaces = section_title.count("|") * 2
+    title_without_tags = re.sub(" *<[^>]+?> *", " ", section_title)
+    toc_md += f"{spaces}* [{title_without_tags}](#{slug})\n"
+    #toc[slug] = section_title
     # wrap the section in html tags:
     return f"<h{h_level} id='{slug}'>{section_title.strip()}</h{h_level}>\n"
 
