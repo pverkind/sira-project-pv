@@ -546,8 +546,8 @@ def format_section_title(section_title, toc_md, indentation=4):
     # remove the mARkdown tag from the section title line:
     section_title = re.sub("### \|+ *", "", section_title.strip())
     # create unique slug from title:
-    slug = re.sub("[^ ء-ي]+", "", section_title)
-    slug = re.sub("\s+", "-", slug.strip())
+    title_without_tags = re.sub("[^ ء-ي]+", " ", section_title).strip()
+    slug = re.sub("\s+", "-", title_without_tags)
     # make sure slug is unique
     slugs = re.findall("\(#([^)]+)", toc_md)
     i=0
@@ -556,14 +556,13 @@ def format_section_title(section_title, toc_md, indentation=4):
         if i < 2:
             slug += "1"
         slug = slug[:-1] + str(i)
-    # create the toc markdown: 
-    title_without_tags = re.sub(" *<[^>]+?> *|\*", " ", section_title)
-    #print(title_without_tags, "(spaces:", [spaces], ")")
-    link = f"[{title_without_tags}](#{slug})"
-    toc_md += f"{spaces}* {link}\n"
-    #toc[slug] = section_title
+
     # wrap the section in html tags:
     section_title_html = f"<h{h_level} id='{slug}'>{section_title}</h{h_level}>\n"
+
+    # add the title to the markdown table of contents: 
+    link = f"[{title_without_tags}](#{slug})"
+    toc_md += f"{spaces}* {link}\n"
 
     return section_title_html, toc_md
 

@@ -170,6 +170,9 @@ p {
     overflow-y: auto;
     padding-top: 20px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+    /* Define variables for indentation and spacing inside the TOC: */
+    --spacing : 1.5rem;  
+    --radius  : 10px;     /* list marker radius*/
 }
 
 
@@ -204,15 +207,34 @@ p {
 }
   
 /* Style the sidebar links */
-.sidebar a {
+#dashboard a {
     padding: 8px 8px 8px 8px;
     text-decoration: none;
     font-size: 15px;
     color: #818181;
     display: block;
     transition: 0.3s;
-  }
-  
+}
+
+#toc a {
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    transition: 0.3s;
+}
+
+#toc li {
+    display: block;      /* removes bullet points */
+    position: relative;  /* new stacking context to  */
+    padding-right : calc(2 * var(--spacing) - var(--radius) - 2px);
+}
+
+#toc ul {
+    margin-right  : calc(var(--radius) - var(--spacing));
+    padding-right : 0;
+}
+
+
 /* When you mouse over the navigation links, change their color */
 .sidebar a:hover {
     color: #f1f1f1;
