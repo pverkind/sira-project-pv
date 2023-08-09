@@ -846,7 +846,7 @@ def format_reference(id_, text):
         <div class="reference-container">
             <a title="{reference_without_tags}" href="javascript:void(0);" class="ref-link">{id_}</a>
             <div class="reference hidden">
-              <p>{reference}</p>
+              <p dir="ltr">{reference}</p>
             </div>
         </div>
         """

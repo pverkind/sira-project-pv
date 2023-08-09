@@ -1,42 +1,68 @@
-import { kitabDiff} from "./kitabDiff.js"
+import { kitabDiff } from "./kitabDiff.js"
 
 
-// toggle visibility of the sidebar:
+// toggle visibility of the left-hand sidebar ("dashboard"):
 
-function toggleSidebar() {
-  // toggle the dashboard sidebar:
-  var dashboard = document.getElementById("dashboard");
-  dashboard.classList.toggle("hidden");
-  // adapt the width of the main content of the page:
-  console.log(document.getElementById("pageContent"));
+function defineWidth(dashboard, pageContent, toc) {
+  // adapt the width of the main content of the page 
+  // (based on the visibility of both sidebars): 
   if (dashboard.classList.contains("hidden")) {
-    console.log("DASHBOARD HIDDEN");
-    document.getElementById("pageContent").style.marginLeft = "5%";
+    if (toc.classList.contains("hidden")) {
+      console.log("DASHBOARD AND TOC HIDDEN");
+      pageContent.style.width = "90%";
+    } else {
+      console.log("DASHBOARD HIDDEN, TOC DISPLAYED");
+      pageContent.style.width = "70%";
+    }
   } else {
-    console.log("DASHBOARD DISPLAYED");
-    document.getElementById("pageContent").style.marginLeft = "20%";
+    if (toc.classList.contains("hidden")) {
+      console.log("DASHBOARD DISPLAYED, TOC HIDDEN");
+      document.getElementById("pageContent").style.width = "70%";
+    } else {
+      console.log("DASHBOARD AND TOC DISPLAYED");
+      document.getElementById("pageContent").style.width = "50%";
+    }
   }
-  // toggle the menu button:
-  document.getElementById("openSidebarBtn").classList.toggle("hidden");
 }
 
-document.getElementById("closeSidebarBtn").addEventListener('click', toggleSidebar);
-document.getElementById("openSidebarBtn").addEventListener('click', toggleSidebar);
+function toggleDashboard() {
+  var dashboard = document.getElementById("dashboard");
+  var toc = document.getElementById("toc");
+  var pageContent = document.getElementById("pageContent");
+
+  // toggle the visibility of the dashboard sidebar:
+
+  dashboard.classList.toggle("hidden");
+
+  // adapt the width of the main content of the page 
+  // (based on the visibility of both sidebars): 
+
+  defineWidth(dashboard, pageContent, toc);
+
+  // toggle the hamburger menu button:
+
+  document.getElementById("openDashboardBtn").classList.toggle("hidden");
+}
+
+document.getElementById("closeDashboardBtn").addEventListener('click', toggleDashboard);
+document.getElementById("openDashboardBtn").addEventListener('click', toggleDashboard);
 
 function toggleToc() {
-  // toggle the table of contents:
+  var dashboard = document.getElementById("dashboard");
   var toc = document.getElementById("toc");
+  var pageContent = document.getElementById("pageContent");
+
+  // toggle the visibility of the table of contents:
+
   toc.classList.toggle("hidden");
-  // adapt the width of the main content of the page:
-  console.log(document.getElementById("pageContent"));
-  if (toc.classList.contains("hidden")) {
-    console.log("TOC HIDDEN");
-    document.getElementById("pageContent").style.marginRight = "5%";
-  } else {
-    console.log("TOC DISPLAYED");
-    document.getElementById("pageContent").style.marginright = "20%";
-  }
-  // toggle the toc button:
+
+  // adapt the width of the main content of the page 
+  // (based on the visibility of both sidebars): 
+
+  defineWidth(dashboard, pageContent, toc);
+
+  // toggle the hamburger menu button:
+
   document.getElementById("openTocBtn").classList.toggle("hidden");
 }
 try {

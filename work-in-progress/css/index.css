@@ -12,7 +12,7 @@ h1 {
     text-align: center;
 }
 h2 { 
-    color: #97926; 
+    color: #979f26; 
     font-size: 26px;
     text-align: center;
 }
@@ -41,7 +41,7 @@ h6 {
 
 .single-witness {
     width: 50vw;
-    margin: auto;
+    margin: auto;  /* center the div */
 }
 
 p {
@@ -59,6 +59,16 @@ p {
     content:"﴾";
 }
 
+.page-no {
+    text-decoration: none;  /* do not underline page number link*/
+}
+.poetry-line {
+    display: block;
+}
+.hemistich2:before {
+    content: "\00a0 \00a0 \00a0 \00a0 ";
+}
+
 .ref-link {
     color: grey;
     font-style: italic;
@@ -73,28 +83,7 @@ p {
 
 /* the header and horizontal menu bar: */
 
-#menuToggle {
-    display: flex;
-    top: 2px;
-    left: 2px;
-    align-items: left;
-    position: sticky;
-    float: left;
-    top: 0;
-}
-
-#tocToggle {
-    display: flex;
-    top: 2px;
-    right: 2px;
-    align-items: right;
-    position: sticky;
-    float: right;
-    top: 0;
-}
-
 #header {
-    display: flex;
     align-items: center;
     justify-content: center;
     height: 200px;
@@ -118,44 +107,73 @@ p {
     padding: 8px;
 }
 
-/* The sidebar menu (based on https://www.w3schools.com/howto/howto_js_collapse_sidebar.asp) */
+/*Main content of the page (excluding header, side bar, table of contents): */
 
-#dashboard {
-    /*height: 100%; /* 100% Full-height */
-    width: 20%; /* 0 width - change this with JavaScript */
-    /*position: fixed; /* Stay in place */
+#pageContent {
+    width: 70%;
+    margin: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    display:inline-block;
+}
+
+/* The hamburger-menu switches that open the sidebars:*/
+
+#menuToggle {
     position: sticky;
+    top: 0px;
+    left: 2px;
     float: left;
-    top: 0;
-    z-index: 10; /* Stay on top */
+    align-items: left;
+}
+
+#tocToggle {
+    display: block;
+    position: sticky;
+    top: 0px;
+    right: 2px;
+    float: right;
+    align-items: right;
+}
+
+
+/* The sidebar menus (based on https://www.w3schools.com/howto/howto_js_collapse_sidebar.asp) */
+
+#dashboard {  /* that is, the left-hand-side menu */
+    /* start width = 20% - change this with JavaScript when the menu is closed: */
+    width: 20%; 
+    /* stick to the top left of its parent container: */
+    position: sticky;  
     top: 0;
     left: 0;
-    background-color: #333;
+    /* align this div to the left side of the screen: */
+    float: left;  
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+    z-index: 10; /* Stay visible above the text */
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px; /* Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
-    unicode-bidi: embed;
-    direction: ltr;
-    
+    background-color: #333;    
 }
 
 #toc {
-    /*height: 100%; /* 100% Full-height */
+    /* start width = 20% - change this with JavaScript when the menu is closed: */
     width: 20%; /* 0 width - change this with JavaScript */
-    /*position: fixed; /* Stay in place */
+    /* stick to the top right of its parent container: */
     position: sticky;
-    float: right;
-    top: 0;
-    z-index: 10; /* Stay on top */
     top: 0;
     right: 0;
-    background-color: #333;
+    /* align this div to the right side of the screen: */
+    float: right;
+    z-index: 10;  /* Stay visible above the text */
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+    background-color: #333;
 }
 
-/* Position and style the close button (top right corner of the sidebar) */
+
+/* Position and style the sidebars' close buttons (X) */
+
 #dashboard .closebtn {
     position: absolute;
     top: -20px;
@@ -164,7 +182,6 @@ p {
     margin-left: 50px;
 }
 
-/* Position and style the close button (top left corner of the sidebar) */
 #toc .closebtn {
     position: absolute;
     top: -20px;
@@ -172,8 +189,22 @@ p {
     font-size: 36px;
     margin-left: 50px;
 }
+
+/* Style the hamburger-menu buttons used to open the sidebars */
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    }
+
+.openbtn:hover {
+    background-color: #444;
+}
   
-/* The sidebar links */
+/* Style the sidebar links */
 .sidebar a {
     padding: 8px 8px 8px 8px;
     text-decoration: none;
@@ -188,37 +219,19 @@ p {
     color: #f1f1f1;
 }
 
+/* Style the sidebar lists */
 .sidebar ul {
     list-style-type: none; /* Remove bullets */
     padding: 8px 8px 8px 24px; /* Remove padding */
     margin: 0; /* Remove margins */
 }
 
-/* The button used to open the sidebar when it is not open */
-.openbtn {
-    font-size: 20px;
-    cursor: pointer;
-    background-color: #333;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    }
 
-.openbtn:hover {
-background-color: #444;
-}
-
-#pageContent {
-    margin-left: 20%;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-/* columns : */
+/* Witness variant columns : */
 
 .scrolling-wrapper {
     overflow-x: auto;
-    //overflow-y: scroll;
+    /*overflow-y: scroll;*/
     overflow-y: hidden;
     white-space: nowrap;              /* this keeps all cards on the same line*/
     width: 70vw;
@@ -259,7 +272,6 @@ background-color: #444;
     margin-top: -35px;
 }
 
-
 .hide {
     cursor: pointer;
     color: grey;
@@ -270,28 +282,11 @@ background-color: #444;
     display: none;
 }
 
-/* Diff visualization: */
+/* Diff visualization styling: */
+/* NB: wikEdDiff automatically adds an additional css to style its output! */
 
 .added {
     background-color: lightblue;
-}
-/*.comment > p {
-    unicode-bidi: embed;
-    direction: ltr;
-}*/
-.reference > p {
-    unicode-bidi: embed;
-    direction: ltr;
-}
-
-.page-no {
-    text-decoration: none;
-}
-.poetry-line {
-    display: block;
-}
-.hemistich2:before {
-    content: "\00a0 \00a0 \00a0 \00a0 ";
 }
 .wikEdDiffDelete {
     text-decoration: line-through;
