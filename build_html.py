@@ -695,7 +695,8 @@ def format_witness_text(main_id, witness_text):
     t = re.sub(r"(@TR\w+@)", r'<a class="hidden" href="#">\1</a>', t)
 
     # format Quran quotations:
-    t = re.sub(r"@QURS(\d+)A(\d+)_BEG([^@]+?)@QURS\1A(\d+)_END", r'<span class="quran" title="Qurʾān \1.\2-\4">\3</span>', t)
+    t = re.sub(r"@QURS(\d+)A(\d+)_BEG([^@]+?)@QURS\1A(\d+)_END", 
+               r'<a href="https://quran.com/\1/\2" class="quran" title="Qurʾān \1.\2-\4" target="_blank">\3</a>', t)
     # remove end aya if it's the same as start aya:
     t = re.sub(r"(Qurʾān \d+\.)(\d+)-\2", r"\1\2", t)
 
