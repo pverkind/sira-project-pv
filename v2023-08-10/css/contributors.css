@@ -1,0 +1,15 @@
+img {
+    /*Limit the height and width of the image:*/
+    width: 30%;
+    height: auto;
+    /*Center the image:*/
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+/*Make an exception for the header image*/
+.header-image {
+    height: 200;
+    width: auto;
+}
