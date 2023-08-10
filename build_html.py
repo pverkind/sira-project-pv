@@ -533,7 +533,7 @@ def format_meta(section):
 
     english_title = re.findall("Transliterated Name: *(.+)", section)
     if english_title:
-        s += "<h2>The witness version of " + english_title[0].strip() + "</h2>\n"
+        s += "<h2 dir='ltr'>The witness version of " + english_title[0].strip() + "</h2>\n"
 
     arabic_title = re.findall("#META# الكتاب: *(.+)", section)
     if arabic_title:
@@ -1045,8 +1045,8 @@ def format_comment(comment):
     comment_without_tags = re.sub(" *<[^>]+?> *", " ", comment)
 
     # split comment into paragraphs:
-    split_comment = re.split(" *\n+ *", comment)
-    comment = "\n    ".join([f'<p dir="auto">{p}</p>' for p in split_comment])
+    split_comment = re.split(" *\n+ *", comment.strip())
+    comment = "\n    ".join([f'<p dir="auto">{p}</p>' for p in split_comment if p.split()])
     
     return f"""\
 <div class='comment-container'>
