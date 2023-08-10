@@ -9,10 +9,10 @@ function defineWidth(dashboard, pageContent, toc) {
   if (dashboard.classList.contains("hidden")) {
     if (toc.classList.contains("hidden")) {
       console.log("DASHBOARD AND TOC HIDDEN");
-      pageContent.style.width = "87%";
+      pageContent.style.width = "85%";
     } else {
       console.log("DASHBOARD HIDDEN, TOC DISPLAYED");
-      pageContent.style.width = "72%";
+      pageContent.style.width = "70%";
     }
   } else {
     if (toc.classList.contains("hidden")) {
