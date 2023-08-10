@@ -543,6 +543,7 @@ def format_meta(section):
     if arabic_author:
         s += "<h2>" + arabic_author[0].strip() + "</h2>\n"
     
+    s += "<br/><br/>"
     return s
 
 def make_variant_card(id_, text, comment, checkbox=True, hidden=False):

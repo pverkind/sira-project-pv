@@ -5,42 +5,41 @@ body {
     padding: 10px;
 }
 
-/* Set the font for ltr elements to Times New Roman
-(because of diacritics display issues with Amiri on Firefox) */
+/* Set the font for ltr elements to Times New Roman (because of diacritics display issues with Amiri on Firefox) */
 *[dir="ltr"] {
     font-family: "Times New Roman";
   }
 
 h1 { 
-    color: #861; 
+    color: #05386b; 
     font-size: 30px;
     text-align: center;
 }
 h2 { 
-    color: #979f26; 
+    color: #05386b; 
     font-size: 26px;
     text-align: center;
 }
 h3 { 
     /*font-family: 'Aref Ruqaa';*/
-    color: #4640c2; 
-    font-size: 23px;
+    color: #379683; 
+    font-size: 26px;
     text-align: center;
 }
 h4 { 
     /*font-family: 'Aref Ruqaa';*/
-    color: #958427; 
-    font-size: 20px;
+    color: maroon; 
+    font-size: 23px;
     text-align: center;
 }
 h5 { 
-    color: #1c201d; 
-    font-size: 17px;
+    color: seagreen; 
+    font-size: 20px;
     text-align: center;
 }
 h6 { 
-    color: #1c201d; 
-    font-size: 16px;
+    color: #333; 
+    font-size: 18px;
     text-align: center;
 }
 
@@ -99,8 +98,8 @@ p {
 #menu-bar {
     display: flex;
     justify-content: space-between;
-    background-color: #333;
-    color: #fff;
+    background-color: #379683;
+    color: #edf5e1;
     height: 40px;
     padding: 10px;
     margin-bottom: 10px;
@@ -116,12 +115,14 @@ p {
 /*Main content of the page (excluding header, side bar, table of contents): */
 
 #main {
-    text-align: center;  /* center the pageContent div*/ 
+    text-align: center;  /* center the pageContent div*/
+    display: block;
+    height: 100%;
 }
 
 #pageContent {
-    /*width: 70%;*/
-    margin: auto;
+    width: 70%;
+    margin: 0 auto;
     padding-left: 10px;
     padding-right: 10px;
     display: inline-block;
@@ -132,19 +133,17 @@ p {
 
 #menuToggle {
     position: sticky;
-    top: 0px;
+    top: 10px;
     left: 2px;
     float: left;
-    align-items: left;
 }
 
 #tocToggle {
     display: block;
     position: sticky;
-    top: 0px;
+    top: 10px;
     right: 2px;
     float: right;
-    align-items: right;
 }
 
 
@@ -153,6 +152,7 @@ p {
 #dashboard {  /* that is, the left-hand-side menu */
     /* start width = 20% - change this with JavaScript when the menu is closed: */
     width: 20%; 
+    max-height: 100vh;
     /* stick to the top left of its parent container: */
     position: sticky;  
     top: 0;
@@ -162,16 +162,16 @@ p {
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
     z-index: 10; /* Stay visible above the text */
     overflow-x: hidden; /* Disable horizontal scroll */
+    overflow-y: auto;
     padding-top: 20px; /* Place content 60px from the top */
-    background-color: #333;    
     text-align: initial;
 }
 
 #toc {
     width: 20%; 
-    height: 100%;
-    background-color: #333;
-    color: #818181;
+    max-height: 100vh;
+    /*background-color: #333;
+    color: #818181;*/
     /* stick to the top right of its parent container: */
     position: sticky;
     top: 0;
@@ -182,24 +182,39 @@ p {
     overflow-x: hidden; /* Disable horizontal scroll */
     overflow-y: auto;
     padding-top: 20px; /* Place content 60px from the top */
+    padding-right: 10px;
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
     text-align: initial;
 }
 
+
+/* Hiding scrollbar for Chrome, Safari and Opera */
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hiding scrollbar for IE, Edge and Firefox */
+.sidebar {
+    background-color: whitesmoke;
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
 
 
 /* Style the hamburger-menu buttons used to open the sidebars */
 .openbtn {
     font-size: 20px;
     cursor: pointer;
-    background-color: #333;
+    background-color: #379683;
     color: white;
     padding: 10px 15px;
     border: none;
-    }
+    border-radius: 5px;
+
+}
 
 .openbtn:hover {
-    background-color: #444;
+    background-color: #05386b;
 }
   
 /* Style the sidebar links */
@@ -208,7 +223,7 @@ p {
     text-decoration: none;
     font-size: 16px;
     transition: 0.3s;
-    color: #aaa;
+    color: #666;
 }
 
 #dashboard a {
@@ -218,14 +233,15 @@ p {
 
 /* When you mouse over the navigation links, change their color */
 .sidebar a:hover {
-    color: #f1f1f1;
+    color: #222;
 }
 
 /* Position and style the sidebars' close buttons (X) */
 
 #dashboard .closebtn {
+    padding: 8px;
     position: absolute;
-    top: -20px;
+    top: -10px;
     right: 0px;
     font-size: 36px;
 }
@@ -283,7 +299,6 @@ p {
     display: inline-block;
     /*display: flex;
     align-items: center;*/
-    
 }
 
 .card {
@@ -318,7 +333,7 @@ p {
 .plus {
     display: inline-block;
     vertical-align: top;
-    color: lightgreen;
+    color: #379683;
     font-size: 50px;
     font-weight: bold;
     cursor: pointer;
