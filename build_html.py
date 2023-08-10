@@ -248,204 +248,6 @@ def build_toc(toc_list, toc_template, indentation):
     return toc_str
 
 
-# def build_toc(toc_d, toc_template):
-#     toc_str = ""
-#     for slug, title in toc_d.items():
-#         toc_str += f"     <a href='#{slug}'>{title}</a>\n"
-#     toc_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_str, toc_template)
-#     return toc_str
-
-
-
-# def add_collapsible_tags(markdown_list_str, open_levels=1, indentation=4):
-#     """Add html tags to turn a nested list into a collapsible tree view.
-#     See https://iamkate.com/code/tree-views/
-
-#     Args:
-#         markdown_list_str (str): a markdown list
-#         open_levels (int): the number of levels that should be open 
-#             when the html list is loaded (html code: "<details open>")
-#         indentation (int): the number of spaces used to indent the markdown list
-    
-#     Example: given the following markdown string:
-
-#     ```
-#     * Giant planets
-#       * Gas giants
-#         * Jupiter
-#         * Saturn</details>
-#       * Ice giants
-#         * Uranus
-#         * Neptune
-#     ```
-    
-#     The function should return: 
-
-#     ```
-#     * <details open><summary>Giant planets</summary>
-#       * <details><summary>Gas giants</summary>
-#         * Jupiter
-#         * Saturn</details>
-#       * <details><summary>Ice giants</summary>
-#         * Uranus
-#         * Neptune</details></details>
-#     ```
-
-#     Which can then be turned into this html: 
-
-#     ```
-#     <ul>
-#         <li>
-#             <details open>
-#             <summary>Giant planets</summary>
-#             <ul>
-#                 <li>
-#                 <details>
-#                     <summary>Gas giants</summary>
-#                     <ul>
-#                     <li>Jupiter</li>
-#                     <li>Saturn</li>
-#                     </ul>
-#                 </details>
-#                 </li>
-#                 <li>
-#                 <details>
-#                     <summary>Ice giants</summary>
-#                     <ul>
-#                     <li>Uranus</li>
-#                     <li>Neptune</li>
-#                     </ul>
-#                 </details>
-#                 </li>
-#             </ul>
-#             </details>
-#         </li>
-#     </ul>
-#     ```
-
-#     """
-#     # normalize the enumeration characters (*, -, +) to asterisk:
-#     markdown_list_str = re.sub(r"^( *)[*+\-]", r"\1*", markdown_list_str.rstrip())
-#     markdown_list_str = re.sub(r"[\r\n]+", r"\n", markdown_list_str.rstrip())
-#     print(markdown_list_str)
-
-#     # deal with empty list:
-#     if not markdown_list_str:
-#         return ""
-
-#     # split the markdown list into lines:
-#     markdown_list = markdown_list_str.split("\n")
-#     new = []
-#     currently_open = [False, False, False, False, False, False, False, False]
-#     for i, line in enumerate(markdown_list):
-#         print(i, [line])
-#         # get the current line's level based on its indentation:
-#         spaces, link = line.split("* ")
-#         current_level = int(len(spaces) / indentation)
-
-#         # check if there's a next line:
-#         try:
-#             next_line = markdown_list[i+1]
-#         except: 
-#             # the end! There's no next line, so close all open details tags 
-#             # and return the updated markdown list as a string:
-#             print([line + (current_level * "</details>")])
-#             currently_open = len([x for x in currently_open if x])
-
-#             new.append(line + (currently_open * "</details>" ))
-#             return "\n".join(new)
-        
-#         # check the level of the next line:
-#         next_level = int(len(next_line.split("* ")[0]) / indentation)
-#         print("current level:", current_level, "next level:", next_level)
-
-#         if next_level > current_level:
-#             # open a new details-summary pair:
-#             if currently_open[current_level]:
-#                 print("Level", current_level, "already open!")
-#                 input()
-#             else:
-#                 currently_open[current_level] = True
-
-#             if current_level < open_levels:
-#                 #details_tag = "<details open>"
-#                 details_tag = "<details>"
-#             else:
-#                 details_tag = "<details>"                    
-#             print("->", [f"{spaces}* {details_tag}<summary>{link}</summary>"])
-#             new.append(f"{spaces}* {details_tag}<summary>{link}</summary>")
-#             # since level jumps (e.g., from level 1 to level 3) throw of the markdown library,
-#             # add empty levels in between:
-#             if next_level > current_level + 1:
-#                 while next_level > current_level + 1:
-#                     spaces += " " * indentation
-#                     new.append(f"{spaces}* --")
-#                     current_level += 1
-
-#         elif next_level == current_level:
-#             # no need to do anything - simply add the current line to the list:
-#             new.append(line)
-#             print("->", [line])
-#             # if current_level == previous_level:
-#             #     # no need to do anything - simply add the current line to the list:
-#             #     new.append(line)
-#             # else:
-#             #     new.append(f"{spaces}* {details_tag}<summary>{link}</summary>")
-#         elif next_level < current_level: 
-#             # close relevant open details-summary pairs with the current line:
-#             close_levels = 0
-#             for i in range(next_level, current_level+1):
-#                 if currently_open[i]:
-#                     close_levels += 1
-#                     currently_open[i] = False
-#             new.append(line + close_levels * "</details>" ) 
-#             print("->", [line + close_levels * "</details>"])
-
-
-
-# def build_toc(toc_md, toc_template):
-#     """Create the html for the table of contents from the markdown string"""
-#     def reorder_details_tags(m):
-#         r = m.group(0)
-#         n_details = r.count("</details>")
-#         #r = re.sub("(?:\s*</details>)+(?:\s*</li>\s*</ul>){" + str(n_details) + "}", 
-#         #           n_details * "</details></li></ul>", r)
-#         r = n_details * "</details></li></ul>"
-#         print(">", r)
-#         return r
-        
-#     #print(toc_md)
-#     # add html tags to the markdown table of contents to make the heading levels collapsible:
-#     toc_md = add_collapsible_tags(toc_md)
-#     # convert the markdown list to html:
-#     toc_html = markdown.markdown(toc_md, extensions=['sane_lists'])
-#     # post-process the html:
-#     toc_html = re.sub(r"</a>\s*</details>((?:\s*</details>)*)\s*</li>\s*</ul>",
-#                       r"</a></li></ul></details>\1",
-#                       toc_html
-#                       )
-#     i=0
-#     while re.findall("</details>\s*</details>", toc_html):        
-#         print(i)
-#         for x in re.findall("</details>\s*</details>[\s\S]{,50}", toc_html):
-#             print(repr(x))
-#         print("reordering detail tags")
-#         #toc_html = re.sub("(?:\s*</details>){2,}(?:\s*</li>\s*</ul>)+",
-#         toc_html = re.sub("(?:\s*</details>){2,}(?:\s*</li>|\s*</ul>)+",
-#                           reorder_details_tags,
-#                           toc_html)
-#         i += 1
-#         if i > 10:
-#             break
-#     #toc_html = re.sub("</details> *</li> *</ul>", "</li></details></ul>", toc_html)
-#     # add the class "tree" to the first ul
-#     toc_html = re.sub("<ul>", "<ul class='tree'>", toc_html, count=1)
-    
-#     # embed the html code in the template:
-#     toc_html = re.sub("TABLE_OF_CONTENTS_HERE", toc_html, toc_template)
-#     print(toc_html)
-#     return toc_html
-
 
 def check_unicode_characters(text):
     import unicodedata
@@ -469,7 +271,7 @@ def convert_to_html(text_file_path, html_folder, template_str, toc_template, ind
     print("converting", text_file_path)
     print("********************************************************")
     # create an empty string that will contain the markdown code for the table of contents:
-    toc_md = []
+    toc_list = []
     # load the text:
     with open(text_file_path, 'r', encoding='utf-8') as file: 
         text = file.read()
@@ -498,7 +300,7 @@ def convert_to_html(text_file_path, html_folder, template_str, toc_template, ind
         elif section.startswith("### |"): # this section is a section header
             #print("-------> section_header!")
             #print(section)
-            section_title, toc_md = format_section_title(section, toc_md)
+            section_title, toc_list = format_section_title(section, toc_list)
             body += section_title
         else: # this section contains the witness reports
             #print("-------> witness report!")
@@ -511,7 +313,7 @@ def convert_to_html(text_file_path, html_folder, template_str, toc_template, ind
     html_str = re.sub("PAGE_CONTENT_HERE", body, template_str)
 
     # build the table of contents and add it to the page:
-    toc_html = build_toc(toc_md, toc_template, indentation)
+    toc_html = build_toc(toc_list, toc_template, indentation)
     html_str = re.sub("TABLE_OF_CONTENTS_HERE", toc_html, html_str)
     
     # save the witness html:
@@ -623,7 +425,7 @@ def make_index_checkbox(id_, ref, checked=True):
                     <label for="{id_}" title="{ref}">{id_}</a></label>
                 </div>"""
 
-def format_section_title(section_title, toc_md, indentation=4):
+def format_section_title(section_title, toc_list, indentation=4):
     """Format a section title as html tags (h3, h4, h5, ...)
 
     Args:
@@ -644,7 +446,7 @@ def format_section_title(section_title, toc_md, indentation=4):
     if slug.count("-") > 5:
         slug = "-".join(slug.split("-")[:5])
     # make non-unique slugs unique by adding a serial number:
-    slugs = re.findall('href="#([^"]+)', "".join(toc_md))
+    slugs = re.findall('href="#([^"]+)', "".join(toc_list))
     i=0
     while slug in slugs:
         i+=1
@@ -656,19 +458,16 @@ def format_section_title(section_title, toc_md, indentation=4):
     section_title_html = f"<{h_tag} id='{slug}'>{bare_section_title}</{h_tag}>\n"
 
     # add the title to the table of contents: 
-    #link = f"[{title_without_tags}](#{slug})"
-    #toc_md += f"{spaces}* {link}\n"
-    toc_md = add_to_toc(title_without_tags, slug, toc_md, level, indentation)
+    toc_list = add_to_toc(title_without_tags, slug, toc_list, level, indentation)
 
-    return section_title_html, toc_md
+    return section_title_html, toc_list
 
-def add_to_toc(title_without_tags, slug, toc_md, level, indentation):
+def add_to_toc(title_without_tags, slug, toc_list, level, indentation):
     # get the indentation spaces for the current title:
     spaces = int(level * indentation) * " "
     # get the previous title's indentation spaces:
     try:
-        #print(re.findall("( +)<li>", toc_md[-1]))
-        prev_spaces = " " * len(re.findall("( +)<li>", toc_md[-1])[-1])
+        prev_spaces = " " * len(re.findall("( +)<li>", toc_list[-1])[-1])
     except:
         prev_spaces = ""
     # add the title to the table of contents, based on its hierarchical level
@@ -699,8 +498,8 @@ def add_to_toc(title_without_tags, slug, toc_md, level, indentation):
             prev_spaces = li_spaces
         # add current line:
         s += f'<a href="#{slug}">{title_without_tags}</a>'
-    toc_md.append(s)
-    return toc_md
+    toc_list.append(s)
+    return toc_list
 
 def format_report(witness_texts, comments, ids):
     if len(witness_texts) == 0:
@@ -747,36 +546,6 @@ def format_report(witness_texts, comments, ids):
         </div>
     </div>
     """
-
-    #     # if less than 4 variants are found, display each of them in a column:
-    #     variant_cards = [make_variant_card(*args, checkbox=False) for args in zip(ids, witness_texts, comments)]
-    #     variant_cards = "\n".join(variant_cards)
-    #     return  f"""
-    #     <div class="report">
-    #       <div class="scrolling-wrapper">
-    #         {variant_cards}
-    #       </div>
-    #     </div>
-    #     """
-    # else:
-        
-
-    #     # display each variant in a column:
-    #     #variant_cards = [make_variant_card(*args, checkbox=False) for args in zip(ids, witness_texts, comments)]
-    #     variant_cards = []
-    #     for id_, text, comment in zip(ids, witness_texts, comments):
-    #         card = make_variant_card(id_, text, comment, checkbox=True)
-    #         variant_cards.append(card)
-    #     variant_cards = "\n".join(variant_cards)
-
-    #     return  f"""
-    #     <div class="report">
-    #       <div class="scrolling-wrapper">
-    #         {variants_index}
-    #         {variant_cards}
-    #       </div>
-    #     </div>
-    #     """
 
 
 def format_section_content(section):
@@ -941,19 +710,7 @@ def format_witness_text(main_id, witness_text):
           </p>
           <p class='diff hidden'></p>
         </div>"""
-#     return f"""\
-# <div class='witness-text-container'>
-#   <p class='witness-text-id'>
-#     {format_id(main_id)}
-#   </p>
-#   <p class='witness-text'>
-#     {witness_text.strip()}
-#   </p>
-#   <p class='page-number'>
-#     {format_page_number(end_page)}
-#   </p>
-# </div>
-# """
+
 
 def format_SEE(s):
     """Format "SEE_" references"""
@@ -1058,23 +815,6 @@ def format_comment(comment):
 </div>
 """
 
-# def format_reference(reference):
-#     """Convert a paragraph's reference(s) to HTML
-#     NB: the reference will be visible when you hover your mouse over the word REFERENCE
-#     and remain visible when you click on it.
-
-#     Args:
-#         comment (str): a comment on a witness report paragraph
-#     """
-#     reference = re.sub(ref_regex, "", reference)
-#     if reference.strip() == "":
-#         return ""
-#     return f"""\
-# <div class='reference-container'>
-#   <a title='{reference}' href='' onclick='toggleSiblingVisibility(event)'>REFERENCE</a>
-#   <div class='reference hidden'>{reference}</div>
-# </div>
-# """
 
 def lookup_ref_by_id(id_):
     """Look up the ID number in the reference list; return a reference
