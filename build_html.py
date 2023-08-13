@@ -101,7 +101,7 @@ for index, row in df.iterrows():
     url = row["URI"]
     try:
         uri = url.split("/")[-1]
-        link = f"[{uri}]({url})"
+        link = f"[🔗]({url})"
     except:
         link = ""
     # store this item in the markdown table:
