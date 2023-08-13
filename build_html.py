@@ -926,15 +926,18 @@ def generate_witness_list(file_paths):
     """
     # create a list of all html files in the html folder:
 
-    ul = "<ul>\n"
+    ul_list = []
     for file_path in file_paths:
         id_ = file_path.split("/")[-1].split(".")[0]
         try:
             label = witness_dict[id_]
         except:
             label = id_
-        ul += f"<li><a href='{file_path}'>{label} ({id_})</a></li>\n"
-    ul += "</ul>\n"
+        li = f"<li><a href='{file_path}'>{label} ({id_})</a></li>\n"
+        ul_list.append((label, li))
+    # sort the list by the labels and build the ul element
+    ul = "".join([tup[1] for tup in sorted(ul_list)])
+    ul = "<ul>\n" + ul + "</ul>\n"
     return ul
 
 def convert_markdown_file(fp):
