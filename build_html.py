@@ -82,7 +82,7 @@ for index, row in selected_columns.iterrows():
 bibliography_md = "# Bibliography\n\n| Witness | Bibliography |\n|--------|-----------|\n"
 for k, v in sorted(bibliography_dict.items()):
     bibliography_md += f"| {k} | {v} |\n"
-with open(os.path.join(root_folder, "data", "side_menu", "Bibliography.md")) as f:
+with open(os.path.join(root_folder, "data", "side_menu", "Bibliography.md"), mode="w", encoding="utf-8") as f:
     f.write(bibliography_md)
 
 #########################################################################################################################
