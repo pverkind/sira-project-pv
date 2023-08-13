@@ -88,8 +88,11 @@ for index, row in df.iterrows():
     citation = row["Citation"]
     title = row["short_title"]
     # italicize title in citation:
-    if title:
+    try:
         citation = re.sub(title, f"*{title}*", citation)
+    except Exception as e:
+        print(e)
+        print("title:", title)
     # format the OpenITI uri/url for the markdown file:
     url = row["URI"]
     try:
