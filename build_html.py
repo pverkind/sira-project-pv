@@ -78,7 +78,11 @@ for index, row in selected_columns.iterrows():
     key = row['ID']
     value = f"<span class='ref-author'>{row['short_author']}</span>, <span class='ref-title'>{row['short_title']}</span>"
     bibliography_dict[key] = value
-
+# Store the bibliography in a markdown file:
+for k, v in sorted(bibliography_dict.items()):
+    bibliography_md += f"| {k} | {v} |\n"
+with open(root_folder, "data", "left_menu") as f:
+    f.write(bibliography_md)
 
 #########################################################################################################################
         
