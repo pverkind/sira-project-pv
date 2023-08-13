@@ -1,7 +1,17 @@
 # Bibliography
 
+<!--- KEVIN, DO NOT MAKE CHANGES TO THIS FILE. --->
+
+<!--- THIS FILE IS GENERATED AUTOMATICALLY FROM THE EXCEL BIBLIOGRAPHY. MAKE ANY CHANGES THERE. --->
+
+
+
+
+
+
 | Witness | Bibliography |
-|--------|-----------|
+|---------|--------------|
+<!--- start --->
 | ???? | <span class='ref-author'>Muḥammad b. Abī Bakr b. Ayyūb b. Qayyim al-Jawzīyah</span>, <span class='ref-title'>Hadāyah al-ḥayārā fī ajwibat al-yahūd waʾl-naṣārā</span> |
 | AAAM | <span class='ref-author'>Abū ʿAbd Allāh Muḥammad b. Aḥmad al-Rāzī</span>, <span class='ref-title'>Aḥādīth Abī ʿAbd Allāh al-Rāzī</span> |
 | AAAT | <span class='ref-author'>Abū al-ʿAbbās al-Aṣamm</span>, <span class='ref-title'>al-Thilāth min ḥadīth Abī al-ʿAbbād al-Aṣamm</span> |
