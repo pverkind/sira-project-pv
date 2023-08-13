@@ -77,7 +77,7 @@ bibl_fp = os.path.join(root_folder, "data", "side_menu", "Bibliography.md")
 with open(bibl_fp, mode="r", encoding="utf-8") as f:
     bibliography_md = f.read().split("<!--- start --->")[0] # page title + table header
 df = pd.read_excel(os.path.join(root_folder, "data", "meta", "Kevin Bibliography.xlsx"))
-df = df.sort_values(by="ID", ascending=True, inplace=True)
+df.sort_values(by="ID", ascending=True, inplace=True)
 df.reset_index(drop=True, inplace=True) # make sure df.iterrows sorts the rows by ID
 bibliography_dict = {}
 for index, row in df.iterrows():
