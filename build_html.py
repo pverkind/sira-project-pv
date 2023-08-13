@@ -64,26 +64,40 @@ comm_regex = r"# @COMMENT:"
 root_folder = os.getcwd()
 df = pd.read_excel(os.path.join(root_folder, "data", "meta", "Witness_list_sheet.xlsx"))
 selected_columns = df[['Arabic name', 'Witness ']]
+
 witness_dict = {}
 for index, row in selected_columns.iterrows():
     key = row['Witness ']
     value = str(row['Arabic name'])
     witness_dict[key] = value
 
-# create a dictionary that contains a verbose citation for each citation code: 
+# create a dictionary that contains a verbose citation for each citation code,
+# and store all citations in a markdown file:
+bibl_fp = os.path.join(root_folder, "data", "side_menu", "Bibliography.md")
+with open(bibl_fp, mode="r", encoding="utf-8") as f:
+    bibliography_md = f.read().split("<!--- start --->")[0] # page title + table header
 df = pd.read_excel(os.path.join(root_folder, "data", "meta", "Kevin Bibliography.xlsx"))
-selected_columns = df[['ID', 'short_author', 'short_title']]
+df = df.sort_values(by="ID", ascending=True, inplace=True)
+df.reset_index(drop=True, inplace=True) # make sure df.iterrows sorts the rows by ID
 bibliography_dict = {}
-for index, row in selected_columns.iterrows():
+for index, row in df.iterrows():
     key = row['ID']
     value = f"<span class='ref-author'>{row['short_author']}</span>, <span class='ref-title'>{row['short_title']}</span>"
     bibliography_dict[key] = value
-# Store the bibliography in a markdown file:
-bibl_fp = os.path.join(root_folder, "data", "side_menu", "Bibliography.md")
-with open(bibl_fp, mode="r", encoding="utf-8") as f:
-    bibliography_md = f.read().split("<!--- start --->")[0]
-for k, v in sorted(bibliography_dict.items()):
-    bibliography_md += f"| {k} | {v} |\n"
+    # format citation for markdown file:
+    citation = row["Citation"]
+    title = row["short_title"]
+    # italicize title in citation:
+    citation = re.sub(title, f"*{title}*", citation)
+    # format the OpenITI uri/url for the markdown file:
+    url = row["URI"]
+    try:
+        uri = url.split("/")[-1]
+        link = f"[{uri}]({url})"
+    except:
+        link = ""
+    # store this item in the markdown table:
+    bibliography_md += f"| {key} | {citation} | {link} |\n"
 with open(bibl_fp, mode="w", encoding="utf-8") as f:
     f.write(bibliography_md)
 
