@@ -923,7 +923,7 @@ def convert_markdown_file(fp):
     """
     with open(fp, mode="r", encoding="utf-8") as file:
         md = file.read()
-    html = markdown.markdown(md)
+    html = markdown.markdown(md, extensions=['markdown.extensions.tables'])
     if not html:
         html = "<p>COMING SOON...</p>"
     return html
