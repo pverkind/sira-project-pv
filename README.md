@@ -1,7 +1,9 @@
 # Sira project website
 
 This is a prototype of a website for Kevin Jaques' Sira Project. 
-It can be viewed here: [pverkind.github.io/sira-project-pv/](https://pverkind.github.io/sira-project-pv/)
+
+It has now moved to github.com/rjaques/Sirah-Project.
+
 
 The website is versioned: the index.html file in the root folder of the repository
 will redirect to the latest released version (releases are dated: vYYYY-MM-DD).
